@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 
 extern "C" {
-#include <SDL_Pango.h>
+#include "SDL_Pango.h"
 }
 
 LabelActor::LabelActor(Rect rect, std::string contents)

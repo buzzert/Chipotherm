@@ -1,5 +1,8 @@
 {
     "C_Cpp.intelliSenseEngineFallback": "Enabled",
+    "C_Cpp.default.includePath": [
+        "lib/SDK_Pango"
+    ],
     "files.associations": {
         "array": "cpp",
         "*.tcc": "cpp",
