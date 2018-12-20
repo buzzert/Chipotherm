@@ -46,13 +46,6 @@ bin/*
 
 .idea/workspace.xml
 
-build/release/*
-build/debug/*
-build/run/*
-
 include/*
-lib/*
 bin/*
-.bash/
-bin/bootstrap
-bin/lib-bash
+

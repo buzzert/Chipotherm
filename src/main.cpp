@@ -1,45 +1,73 @@
-#include <iostream>
 #include <SDL2/SDL.h>
 
-using namespace std;
+#include <libgen.h>
+#include <memory>
+
+#include "main_scene.h"
+#include "label_actor.h"
+
+void print_usage(char *progname)
+{
+    printf("%s by buzzert 2016\n", progname);
+    printf("usage: %s width height [-w]\n", progname);
+    printf("\t-w : windowed mode\n");
+}
 
 int main(int argc, char **argv)
 {
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-        cerr << "Unable to initialize SDL: " << SDL_GetError() << endl;
+    int canvasWidth = 64;
+    int canvasHeight = 160;
+    bool windowed = false;
+
+    if (argc < 3) {
+        print_usage(basename(argv[0]));
         return 1;
     }
 
-    SDL_Window *window = SDL_CreateWindow("chipotherm", 0, 0, 640, 480, SDL_WINDOW_SHOWN);
-    if (!window) {
-        cerr << "Error creating window: " << SDL_GetError() << endl;        
-        return 1;
+    for (unsigned int i = 1; i < argc; i++) {
+        switch (i) {
+        case 1:
+            canvasWidth = atoi(argv[i]);
+            break;
+        case 2:
+            canvasHeight = atoi(argv[i]);
+            break;
+        case 3:
+            if (strcmp("-w", argv[i]) == 0) {
+                windowed = true;
+            }
+            break;
+        }
     }
 
-    SDL_Surface *surface = SDL_GetWindowSurface(window);
+    Rect canvasRect(0, 0, canvasWidth, canvasHeight);
+
+    MainScene mainScene(canvasRect, windowed);
+
+    auto label = std::unique_ptr<LabelActor>(new LabelActor(Rect(0, 0, 600, 200), "Hello!!"));
+    mainScene.add_actor(std::move(label));
 
     bool running = true;
-    while (running) {
-        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0xFF, 0x00, 0x00));
-        SDL_UpdateWindowSurface(window);
+    const int kTicksPerFrame = 1000 / 60;
 
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_QUIT:
-                    running = false;
-                    break;
-                default:
-                    break;
+    while (running) {
+        Uint32 startTime = SDL_GetTicks();
+
+        SDL_Event e;
+        while ( SDL_PollEvent( &e ) != 0 ) {
+            if (e.type == SDL_QUIT) {
+                running = false;
             }
         }
 
-        SDL_Delay(500);
-    }
+        mainScene.update();
+        mainScene.render();
 
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+        Uint32 ticks = SDL_GetTicks() - startTime;
+        if (ticks < kTicksPerFrame) {
+            SDL_Delay(kTicksPerFrame - ticks);
+        }
+    }
 
     return 0;
 }
-
