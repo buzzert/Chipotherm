@@ -61,6 +61,9 @@ void LabelActor::update_texture(SDL_Renderer *renderer)
     _needs_texture_update = false;
 
     SDLPango_Context *context = SDLPango_CreateContext();
+
+    SDL_Color color = _foreground_color.to_sdl_color();
+    SDLPango_SetColor(context, &color);
     SDLPango_SetMinimumSize(context, rect.width, rect.height);
 
     SDLPango_SetMarkup(context, _contents.c_str(), -1);
