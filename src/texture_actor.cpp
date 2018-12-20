@@ -1,3 +1,9 @@
+/*
+ * Created on Thu Dec 20 2018
+ *
+ * Copyright (c) 2018 James Magahern <james@magahern.com>
+ */
+
 #include "texture_actor.h"
 
 #include <SDL2/SDL_image.h>
