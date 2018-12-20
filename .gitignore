@@ -40,10 +40,7 @@
 **/CMakeScripts
 **/compile_commands.json
 
-include/divisible/*
 bin/*
-lib/*
-test/test_runner
 
 ## Local 
 
