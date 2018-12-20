@@ -5,6 +5,7 @@
 
 #include "main_scene.h"
 #include "label_actor.h"
+#include "qube_actor.h"
 
 int main(int argc, char **argv)
 {
@@ -22,6 +23,9 @@ int main(int argc, char **argv)
 
     auto label = std::unique_ptr<LabelActor>(new LabelActor(Rect(0, 0, 600, 200), "Hello!!"));
     mainScene.add_actor(std::move(label));
+
+    auto qube = std::unique_ptr<QubeActor>(new QubeActor(Rect(0, 100, 100, 100)));
+    mainScene.add_actor(std::move(qube));
 
     bool running = true;
     const int kTicksPerFrame = 1000 / 60;

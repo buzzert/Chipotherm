@@ -1,6 +1,8 @@
 #ifndef ACTOR_H
 #define ACTOR_H
 
+#define DEFAULT_RGBA_MASK 0x00FF0000, 0x0000FF00, 0x000000FF, 0x00
+
 #include "SDL2/SDL.h"
 
 struct Vector

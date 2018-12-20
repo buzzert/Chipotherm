@@ -1,5 +1,5 @@
-#ifndef TEXTURE_ACTOR_H
-#define TEXTURE_ACTOR_H
+#ifndef LABEL_ACTOR_H 
+#define LABEL_ACTOR_H
 
 #include "actor.h"
 #include "color.h"

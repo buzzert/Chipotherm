@@ -9,7 +9,7 @@ set(CHIPOTHERM_INSTALL_BIN_DIR ${PROJECT_SOURCE_DIR}/bin)
 
 # Project specific dependencies
 find_package(PkgConfig)
-set(PROJECT_DEPS sdl2 SDL2_image freetype2 pangoft2)
+set(PROJECT_DEPS sdl2 SDL2_image freetype2 pangoft2 cairo)
 pkg_check_modules (DEPS REQUIRED ${PROJECT_DEPS})
 
 set(CFLAGS ${DEPS_CFLAGS} ${DEPS_CFLAGS_OTHER})
@@ -28,6 +28,7 @@ set(SOURCE_FILES
     src/label_actor.cpp
     src/main.cpp
     src/main_scene.cpp
+    src/qube_actor.cpp
     src/texture_actor.cpp
 )
 
