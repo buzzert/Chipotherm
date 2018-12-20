@@ -1,5 +1,4 @@
-#ifndef QUBE_ACTOR_H
-#define QUBE_ACTOR_H
+#pragma once 
 
 #include "actor.h"
 #include "color.h"
@@ -54,4 +53,3 @@ private:
     void draw_tetrahedron(double cx, double cy, double radius, double time_offset);
 };
 
-#endif

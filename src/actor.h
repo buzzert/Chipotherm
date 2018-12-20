@@ -1,9 +1,8 @@
-#ifndef ACTOR_H
-#define ACTOR_H
-
-#define DEFAULT_RGBA_MASK 0x00FF0000, 0x0000FF00, 0x000000FF, 0x00
+#pragma once
 
 #include "SDL2/SDL.h"
+
+#define DEFAULT_RGBA_MASK 0x00FF0000, 0x0000FF00, 0x000000FF, 0x00
 
 struct Vector
 {
@@ -46,5 +45,3 @@ public:
     Rect rect;
     float alpha;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef MAIN_SCENE_H
-#define MAIN_SCENE_H
+#pragma once
 
 #include "actor.h"
 
@@ -30,4 +29,3 @@ private:
     Rect _canvasRect;
 };
 
-#endif

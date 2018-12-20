@@ -1,5 +1,4 @@
-#ifndef TEXTURE_ACTOR_H
-#define TEXTURE_ACTOR_H
+#pragma once
 
 #include "actor.h"
 
@@ -19,4 +18,3 @@ public:
     std::shared_ptr<SDL_Texture> texture;
 };
 
-#endif

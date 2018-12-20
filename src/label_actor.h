@@ -1,5 +1,4 @@
-#ifndef LABEL_ACTOR_H 
-#define LABEL_ACTOR_H
+#pragma once 
 
 #include "actor.h"
 #include "color.h"
@@ -29,5 +28,3 @@ private:
     std::shared_ptr<SDL_Texture> _texture;
     void update_texture(SDL_Renderer *renderer);
 };
-
-#endif
