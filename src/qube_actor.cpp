@@ -104,8 +104,7 @@ void QubeActor::render(SDL_Renderer *renderer)
     cairo_set_source_rgb(cr, 0, 0, 0);
     cairo_paint(cr);
 
-    double radius = rect.height / 8;
-    draw_tetrahedron(rect.width / 4, rect.height / 2, (radius *.1) + (radius *.9), _time_offset);
+    draw_tetrahedron(rect.width / 2, rect.height / 2, rect.height / 2, _time_offset);
 
     // TODO: three classes doing this same thing now
     SDL_Rect dst_rect = rect.to_sdl_rect();

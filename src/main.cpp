@@ -30,7 +30,7 @@ int main(int argc, char **argv)
     auto label = std::unique_ptr<LabelActor>(new LabelActor(Rect(0, 0, 600, 200), "Hello!!"));
     mainScene.add_actor(std::move(label));
 
-    auto qube = std::unique_ptr<QubeActor>(new QubeActor(Rect(50, 25, 600, 600)));
+    auto qube = std::unique_ptr<QubeActor>(new QubeActor(Rect(0, 25, 300, 300)));
     mainScene.add_actor(std::move(qube));
 
     bool running = true;
