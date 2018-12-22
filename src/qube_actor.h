@@ -8,30 +8,11 @@
 
 #include "actor.h"
 #include "color.h"
+#include "geometry.h"
 
 #include <cairo/cairo.h>
 #include <memory>
 #include <vector>
-
-struct Vec2 {
-    double x;
-    double y;
-};
-
-struct Vec3 {
-    double x;
-    double y;
-    double z;
-
-    double& operator[] (const int index) {
-        switch (index) {
-            case 0: return x;
-            case 1: return y;
-            case 2: return z;
-            default: throw;
-        }
-    }
-};
 
 class QubeActor : public Actor 
 {
