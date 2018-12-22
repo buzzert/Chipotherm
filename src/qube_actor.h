@@ -6,7 +6,7 @@
 
 #pragma once 
 
-#include "actor.h"
+#include "cairo_actor.h"
 #include "color.h"
 #include "geometry.h"
 
@@ -14,7 +14,7 @@
 #include <memory>
 #include <vector>
 
-class QubeActor : public Actor 
+class QubeActor : public CairoActor
 {
 public:
     QubeActor(Rect rect);
@@ -23,9 +23,7 @@ public:
     void render(SDL_Renderer *renderer) override;
 
 private:
-    std::shared_ptr<cairo_t>     _cairo_ctx;
-    std::shared_ptr<SDL_Surface> _surface;
-    double                       _time_offset;
+    double _time_offset;
 
     void draw_line(double x1, double y1, double x2, double y2, double size);
     void draw_point(double x, double y, double size);

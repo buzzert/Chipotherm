@@ -25,6 +25,7 @@ include_directories(lib/SDL_Pango)
 
 set(SOURCE_FILES
     src/actor.cpp
+    src/cairo_actor.cpp
     src/geometry.cpp
     src/label_actor.cpp
     src/main.cpp
