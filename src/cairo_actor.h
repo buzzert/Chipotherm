@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include "actor.h"
+#include "texture_actor.h"
 #include <memory>
 #include <cairo/cairo.h>
 
-class CairoActor : public Actor
+class CairoActor : public TextureActor 
 {
 public:
     CairoActor(Rect r);

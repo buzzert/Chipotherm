@@ -16,6 +16,7 @@ std::shared_ptr<SDL_Texture> TextureForRes(std::string const &resourceName, SDL_
 class TextureActor : public Actor
 {
 public:
+    TextureActor(Rect r);
     TextureActor(std::shared_ptr<SDL_Texture> texture);
     ~TextureActor() override {};
 

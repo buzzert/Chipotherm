@@ -7,7 +7,7 @@
 #include "cairo_actor.h"
 
 CairoActor::CairoActor(Rect r)
-    : Actor(r)
+    : TextureActor(r)
 {
     SDL_Surface *surface = SDL_CreateRGBSurface(0, rect.width, rect.height, 32, DEFAULT_RGBA_MASK);    
     _surface = std::shared_ptr<SDL_Surface>(surface, SDL_FreeSurface);
@@ -30,9 +30,12 @@ void CairoActor::render(SDL_Renderer *renderer)
     // TODO: three classes doing this same thing now
     SDL_Rect dst_rect = rect.to_sdl_rect();
 
-    // slow
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, _surface.get());
-    SDL_SetTextureAlphaMod(texture, (alpha * 255));
-    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_ADD);
-    SDL_RenderCopy(renderer, texture, NULL, &dst_rect);
+    if (texture.get() == NULL) {
+        SDL_Texture *textureptr = SDL_CreateTextureFromSurface(renderer, _surface.get());
+        texture = std::shared_ptr<SDL_Texture>(textureptr, SDL_DestroyTexture);
+    } else {
+        SDL_UpdateTexture(texture.get(), NULL, _surface->pixels, _surface->pitch);
+    }
+
+    TextureActor::render(renderer);
 }

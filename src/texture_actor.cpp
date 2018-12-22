@@ -26,6 +26,11 @@ std::shared_ptr<SDL_Texture> TextureForRes(std::string const &resourceName, SDL_
     return std::shared_ptr<SDL_Texture>(imageTexture, SDL_DestroyTexture);
 }
 
+TextureActor::TextureActor(Rect r)
+    : Actor(r)
+{
+}
+
 TextureActor::TextureActor(std::shared_ptr<SDL_Texture> texture)
     : Actor(Rect(0, 0, 0, 0)), texture(texture)
 {
