@@ -14,7 +14,7 @@ extern "C" {
 }
 
 LabelActor::LabelActor(Rect rect, std::string contents)
-    : Actor(rect), _contents(contents), _foreground_color(0xFF, 0x00, 0x00, 0xFF)
+    : TextureActor(rect), _contents(contents), _foreground_color(0xFF, 0x00, 0x00, 0xFF)
 {
     _needs_texture_update = true;
 }
@@ -44,15 +44,6 @@ void LabelActor::set_foreground_color(Color &c)
 const Color& LabelActor::get_foreground_color() const
 {
     return _foreground_color;
-}
-
-void LabelActor::render(SDL_Renderer *renderer)
-{
-    SDL_Rect dst_rect = rect.to_sdl_rect();
-
-    SDL_SetTextureAlphaMod(_texture.get(), (alpha * 255));
-    SDL_SetTextureBlendMode(_texture.get(), SDL_BLENDMODE_ADD);
-    SDL_RenderCopy(renderer, _texture.get(), NULL, &dst_rect);
 }
 
 void LabelActor::update(SDL_Renderer *renderer)
@@ -101,15 +92,12 @@ void LabelActor::update_texture(SDL_Renderer *renderer)
 
     SDLPango_Draw(context, surface, 0, 0);
 
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if (!texture) {
-        std::cerr << "Error creating texture for label: "
-            << SDL_GetError() << std::endl;
-        
-        return;
-    }    
+    if (texture.get() == NULL) {
+        SDL_Texture *textureptr = SDL_CreateTextureFromSurface(renderer, surface);
+        texture = std::shared_ptr<SDL_Texture>(textureptr, SDL_DestroyTexture);
+    } else {
+        SDL_UpdateTexture(texture.get(), NULL, surface->pixels, surface->pitch);
+    }
 
     SDL_FreeSurface(surface);
-
-    _texture = std::shared_ptr<SDL_Texture>(texture, SDL_DestroyTexture);
 }

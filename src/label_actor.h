@@ -6,13 +6,13 @@
 
 #pragma once 
 
-#include "actor.h"
+#include "texture_actor.h"
 #include "color.h"
 
 #include <string>
 #include <memory>
 
-class LabelActor : public Actor
+class LabelActor : public TextureActor
 {
 public:
     LabelActor(Rect rect, std::string contents);
@@ -25,12 +25,10 @@ public:
     const Color& get_foreground_color() const;
 
     void update(SDL_Renderer *renderer) override;
-    void render(SDL_Renderer *renderer) override;
 private:
     std::string _contents;
     Color       _foreground_color;
-
-    bool _needs_texture_update;
-    std::shared_ptr<SDL_Texture> _texture;
+    bool        _needs_texture_update;
+    
     void update_texture(SDL_Renderer *renderer);
 };
