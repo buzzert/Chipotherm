@@ -47,6 +47,11 @@ void MainScene::add_actor(std::unique_ptr<Actor> &&a)
     _actors.push_back(std::move(a));
 }
 
+void MainScene::set_scale(float scale)
+{
+    SDL_RenderSetScale(_renderer, scale, scale);
+}
+
 void MainScene::render()
 {
     SDL_SetRenderDrawColor(_renderer, 0x00, 0x00, 0x00, 0xFF);

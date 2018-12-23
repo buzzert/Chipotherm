@@ -15,17 +15,20 @@
 
 int main(int argc, char **argv)
 {
-    int canvasWidth = 640;
-    int canvasHeight = 480;
-    bool windowed = false;
+    // CHIP resolution is 480x272
+    const int canvasWidth = 480;
+    const int canvasHeight = 272;
+    const float scale = 2.0; // for testing on hiDPI
 
+    bool windowed = false;
     if (argc > 1 && strcmp("-w", argv[1]) == 0) {
         windowed = true;
     }
 
-    Rect canvasRect(0, 0, canvasWidth, canvasHeight);
+    Rect canvasRect(0, 0, canvasWidth * scale, canvasHeight * scale);
 
     MainScene mainScene(canvasRect, windowed);
+    mainScene.set_scale(scale);
 
     std::string markup = "The quick brown fox";
     auto label = std::make_unique<LabelActor>(Rect(0, 0, 600, 200), markup);

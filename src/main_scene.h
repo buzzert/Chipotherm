@@ -22,6 +22,7 @@ public:
     ~MainScene();
 
     void add_actor(std::unique_ptr<Actor>&& actor);
+    void set_scale(float scale);
 
     void update();
     void render();
