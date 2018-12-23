@@ -27,7 +27,8 @@ int main(int argc, char **argv)
 
     MainScene mainScene(canvasRect, windowed);
 
-    auto label = std::unique_ptr<LabelActor>(new LabelActor(Rect(0, 0, 600, 200), "Hello!!"));
+    std::string markup = "The quick brown fox";
+    auto label = std::unique_ptr<LabelActor>(new LabelActor(Rect(0, 0, 600, 200), markup));
     mainScene.add_actor(std::move(label));
 
     auto qube = std::unique_ptr<QubeActor>(new QubeActor(Rect(0, 25, 300, 300)));

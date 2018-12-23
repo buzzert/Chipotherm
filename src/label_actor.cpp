@@ -13,8 +13,12 @@ extern "C" {
 #include "SDL_Pango.h"
 }
 
+#define DEFAULT_FONT_PROP "Karla 24"
+
 LabelActor::LabelActor(Rect rect, std::string contents)
-    : TextureActor(rect), _contents(contents), _foreground_color(0xFF, 0x00, 0x00, 0xFF)
+    : TextureActor(rect), _contents(contents), 
+      _foreground_color(0xFF, 0x00, 0x00, 0xFF),
+      _font_prop(DEFAULT_FONT_PROP)
 {
     _needs_texture_update = true;
 }
@@ -62,8 +66,10 @@ void LabelActor::update_texture(SDL_Renderer *renderer)
     SDL_Color color = _foreground_color.to_sdl_color();
     SDLPango_SetColor(context, &color);
     SDLPango_SetMinimumSize(context, rect.width, rect.height);
-
-    SDLPango_SetMarkup(context, _contents.c_str(), -1);
+    
+    std::string markup = "<span font='" + _font_prop + "'>"
+                            + _contents + "</span>";
+    SDLPango_SetMarkup(context, markup.c_str(), -1);
 
     Uint32 rmask, gmask, bmask, amask;
 
