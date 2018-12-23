@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     MainScene mainScene(canvasRect, windowed);
 
     std::string markup = "The quick brown fox";
-    auto label = std::make_unique<LabelActor>(Rect {0, 0, 600, 200}, markup);
+    auto label = std::make_unique<LabelActor>(Rect(0, 0, 600, 200), markup);
     mainScene.add_actor(std::move(label));
 
     auto qube = std::make_unique<QubeActor>(Rect(0, 25, 300, 300));
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
         Uint32 startTime = SDL_GetTicks();
 
         SDL_Event e;
-        while ( SDL_PollEvent( &e ) != 0 ) {
+        while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
                 running = false;
             }
