@@ -9,6 +9,30 @@
 #include <vector>
 #include <math.h>
 
+// for SDL_Rect
+#include <SDL2/SDL.h>
+
+struct Rect
+{
+    float x;
+    float y;
+
+    int width;
+    int height;
+
+    Rect() : x(0), y(0), width(0), height(0) {};
+    Rect(int x, int y, int width, int height) : x(x), y(y), width(width), height(height) {};
+    SDL_Rect to_sdl_rect() {
+        SDL_Rect rect;
+        rect.x = x;
+        rect.y = y;
+        rect.w = width;
+        rect.h = height;
+
+        return rect;
+    };
+};
+
 struct Vec2 {
     double x;
     double y;
