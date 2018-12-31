@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <pango/pangocairo.h>
 
 extern "C" {
 #include "SDL_Pango.h"
@@ -16,11 +17,11 @@ extern "C" {
 #define DEFAULT_FONT_PROP "Karla 24"
 
 LabelActor::LabelActor(Rect rect, std::string contents)
-    : TextureActor(rect), _contents(contents), 
+    : CairoActor(rect), _contents(contents), 
       _foreground_color(0xFF, 0x00, 0x00, 0xFF),
-      _font_prop(DEFAULT_FONT_PROP)
+      _font_prop(DEFAULT_FONT_PROP),
+      _needs_texture_update(true)
 {
-    _needs_texture_update = true;
 }
 
 LabelActor::~LabelActor()
@@ -50,60 +51,22 @@ const Color& LabelActor::get_foreground_color() const
     return _foreground_color;
 }
 
-void LabelActor::update(SDL_Renderer *renderer)
-{
-    if (_needs_texture_update) {
-        update_texture(renderer);
-    }
-}
-
-void LabelActor::update_texture(SDL_Renderer *renderer)
+void LabelActor::display_surface()
 {
     _needs_texture_update = false;
 
-    SDLPango_Context *context = SDLPango_CreateContext();
+    PangoLayout *pango_layout = pango_cairo_create_layout(_cairo_ctx.get());
 
-    SDL_Color color = _foreground_color.to_sdl_color();
-    SDLPango_SetColor(context, &color);
-    SDLPango_SetMinimumSize(context, rect.width, rect.height);
+    PangoFontDescription *pango_desc = pango_font_description_from_string(_font_prop.c_str());
+    pango_layout_set_font_description(pango_layout, pango_desc);
+    pango_font_description_free(pango_desc);
     
-    std::string markup = "<span font='" + _font_prop + "'>"
-                            + _contents + "</span>";
-    SDLPango_SetMarkup(context, markup.c_str(), -1);
+    pango_layout_set_markup(pango_layout, _contents.c_str(), -1);
 
-    Uint32 rmask, gmask, bmask, amask;
+    Color &color = _foreground_color;
+    cairo_set_source_rgb(_cairo_ctx.get(), color.red, color.green, color.blue);
 
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    rmask = 0xff000000;
-    gmask = 0x00ff0000;
-    bmask = 0x0000ff00;
-    amask = 0x000000ff;
-#else
-    rmask = 0x000000ff;
-    gmask = 0x0000ff00;
-    bmask = 0x00ff0000;
-    amask = 0xff000000;
-#endif
-
-    SDL_Surface *surface = SDL_CreateRGBSurface(
-        0, rect.width, rect.height, 32, rmask, gmask, bmask, amask
-    );
-
-    if (!surface) {
-        std::cerr << "Error creating surface for label: "
-            << SDL_GetError() << std::endl;
-        
-        return;
-    }
-
-    SDLPango_Draw(context, surface, 0, 0);
-
-    if (texture.get() == NULL) {
-        SDL_Texture *textureptr = SDL_CreateTextureFromSurface(renderer, surface);
-        texture = std::shared_ptr<SDL_Texture>(textureptr, SDL_DestroyTexture);
-    } else {
-        SDL_UpdateTexture(texture.get(), NULL, surface->pixels, surface->pitch);
-    }
-
-    SDL_FreeSurface(surface);
+    cairo_move_to(_cairo_ctx.get(), 0.0, 0.0);
+    pango_cairo_show_layout(_cairo_ctx.get(), pango_layout);
+    g_object_unref(pango_layout);
 }

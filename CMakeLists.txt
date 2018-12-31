@@ -9,7 +9,7 @@ set(CHIPOTHERM_INSTALL_BIN_DIR ${PROJECT_SOURCE_DIR}/bin)
 
 # Project specific dependencies
 find_package(PkgConfig)
-set(PROJECT_DEPS sdl2 SDL2_image freetype2 pangoft2 cairo)
+set(PROJECT_DEPS sdl2 SDL2_image freetype2 pango pangoft2 pangocairo cairo)
 pkg_check_modules (DEPS REQUIRED ${PROJECT_DEPS})
 
 set(CFLAGS ${DEPS_CFLAGS} ${DEPS_CFLAGS_OTHER})

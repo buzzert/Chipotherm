@@ -17,7 +17,7 @@ QubeActor::QubeActor(Rect rect)
 
 void QubeActor::update(SDL_Renderer *renderer)
 {
-    _time_offset += 0.01;;
+    _time_offset += 0.01;
 }
 
 void QubeActor::render(SDL_Renderer *renderer)
@@ -88,7 +88,7 @@ void QubeActor::draw_mesh(
 
 void QubeActor::draw_tetrahedron(double cx, double cy, double radius, double time_offset)
 {
-    double q = 0.57735026919;
+    double q = 0.5;
 
     std::vector<Vec3> vertices = {
         { q, q, q},

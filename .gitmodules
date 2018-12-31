@@ -1,3 +1,0 @@
-[submodule "lib/SDL_Pango"]
-	path = lib/SDL_Pango
-	url = https://github.com/Barakat/SDL_Pango.git

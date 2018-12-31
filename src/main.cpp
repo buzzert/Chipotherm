@@ -37,8 +37,8 @@ int main(int argc, char **argv)
     auto qube1 = std::make_shared<QubeActor>(Rect());
     grid->stack_actor(qube1, 0, -1);
     
-    auto qube2 = std::make_shared<QubeActor>(Rect());
-    grid->stack_actor(qube2, 1, -1);
+    auto label = std::make_shared<LabelActor>(Rect(), "This is a test!");
+    grid->stack_actor(label, 1, -1);
 
     auto qube3 = std::make_shared<QubeActor>(Rect());
     grid->stack_actor(qube3, 1, -1);

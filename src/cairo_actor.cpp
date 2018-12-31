@@ -36,6 +36,7 @@ void CairoActor::render(SDL_Renderer *renderer)
 {
     if (needs_display) {
         generate_surface();
+        display_surface();
     }
 
     // TODO: three classes doing this same thing now
