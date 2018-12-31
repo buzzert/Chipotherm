@@ -10,10 +10,6 @@
 #include <SDL2/SDL.h>
 #include <pango/pangocairo.h>
 
-extern "C" {
-#include "SDL_Pango.h"
-}
-
 #define DEFAULT_FONT_PROP "Karla 24"
 
 LabelActor::LabelActor(Rect rect, std::string contents)

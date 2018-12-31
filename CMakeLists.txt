@@ -17,7 +17,7 @@ set(LIB_PATHS ${DEPS_LIBRARY_DIRS})
 add_definitions(${CFLAGS})
 link_directories(${LIB_PATHS})
 
-add_subdirectory(lib)
+# add_subdirectory(lib)
 
 # Some include paths
 include_directories(src)
@@ -37,6 +37,5 @@ set(SOURCE_FILES
 
 add_executable(chipotherm ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} ${DEPS_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} sdlpango)
 install(TARGETS chipotherm DESTINATION ${CHIPOTHERM_INSTALL_BIN_DIR})
 
