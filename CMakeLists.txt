@@ -21,7 +21,6 @@ link_directories(${LIB_PATHS})
 
 # Some include paths
 include_directories(src)
-include_directories(lib/SDL_Pango)
 
 set(SOURCE_FILES
     src/actor.cpp
