@@ -6,13 +6,13 @@
 
 #pragma once 
 
-#include "cairo_actor.h"
-#include "color.h"
-#include "geometry.h"
+#include <bubbles/bubbles.h>
 
 #include <cairo/cairo.h>
 #include <memory>
 #include <vector>
+
+using namespace Bubbles;
 
 class QubeActor : public CairoActor
 {

@@ -1,0 +1,3 @@
+[submodule "lib/bubbles"]
+	path = lib/bubbles
+	url = buzzert.net:repos/bubbles

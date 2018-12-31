@@ -10,17 +10,16 @@
 #include <libgen.h>
 #include <memory>
 
-#include "actor_grid.h"
-#include "main_scene.h"
-#include "label_actor.h"
 #include "qube_actor.h"
+#include <bubbles/bubbles.h>
+
+using namespace Bubbles;
 
 int main(int argc, char **argv)
 {
-    // CHIP resolution is 480x272
-    const int canvasWidth = 480;
-    const int canvasHeight = 272;
-    const float scale = 2.0; // for testing on hiDPI
+    const int canvasWidth = 640;
+    const int canvasHeight = 480;
+    const float scale = 1.0; // for testing on hiDPI
 
     bool windowed = false;
     if (argc > 1 && strcmp("-w", argv[1]) == 0) {
@@ -45,27 +44,7 @@ int main(int argc, char **argv)
 
     mainScene.add_actor(grid);
 
-    bool running = true;
-    const int kTicksPerFrame = 1000 / 60;
-
-    while (running) {
-        Uint32 startTime = SDL_GetTicks();
-
-        SDL_Event e;
-        while (SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT) {
-                running = false;
-            }
-        }
-
-        mainScene.update();
-        mainScene.render();
-
-        Uint32 ticks = SDL_GetTicks() - startTime;
-        if (ticks < kTicksPerFrame) {
-            SDL_Delay(kTicksPerFrame - ticks);
-        }
-    }
-
+    // Start scene's runloop
+    mainScene.run();
     return 0;
 }
