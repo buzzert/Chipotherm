@@ -17,9 +17,10 @@ using namespace Bubbles;
 
 int main(int argc, char **argv)
 {
-    const int canvasWidth = 640;
-    const int canvasHeight = 480;
-    const float scale = 1.0; // for testing on hiDPI
+    // CHIP resolution is 480x272
+    const int canvasWidth = 480;
+    const int canvasHeight = 272;
+    const float scale = 2.0; // for testing on hiDPI
 
     bool windowed = false;
     if (argc > 1 && strcmp("-w", argv[1]) == 0) {
@@ -36,7 +37,9 @@ int main(int argc, char **argv)
     auto qube1 = std::make_shared<QubeActor>(Rect());
     grid->stack_actor(qube1, 0, -1);
     
-    auto label = std::make_shared<LabelActor>(Rect(), "This is a test!");
+    auto label = std::make_shared<LabelActor>(Rect(), "CHIP thermostat");
+    label->set_font_prop("Karla 18");
+    label->set_foreground_color(Color(0xFF, 0x00, 0xFF, 0xFF));
     grid->stack_actor(label, 1, -1);
 
     auto qube3 = std::make_shared<QubeActor>(Rect());
