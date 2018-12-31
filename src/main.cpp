@@ -6,9 +6,11 @@
 
 #include <SDL2/SDL.h>
 
+#include <cassert>
 #include <libgen.h>
 #include <memory>
 
+#include "actor_grid.h"
 #include "main_scene.h"
 #include "label_actor.h"
 #include "qube_actor.h"
@@ -30,12 +32,18 @@ int main(int argc, char **argv)
     MainScene mainScene(canvasRect, windowed);
     mainScene.set_scale(scale);
 
-    std::string markup = "The quick brown fox";
-    auto label = std::make_unique<LabelActor>(Rect(0, 0, 600, 200), markup);
-    mainScene.add_actor(std::move(label));
+    auto grid = std::make_shared<ActorGrid>(Rect(0, 0, canvasWidth, canvasHeight), 2);
 
-    auto qube = std::make_unique<QubeActor>(Rect(0, 25, 300, 300));
-    mainScene.add_actor(std::move(qube));
+    auto qube1 = std::make_shared<QubeActor>(Rect());
+    grid->stack_actor(qube1, 0, -1);
+    
+    auto qube2 = std::make_shared<QubeActor>(Rect());
+    grid->stack_actor(qube2, 1, -1);
+
+    auto qube3 = std::make_shared<QubeActor>(Rect());
+    grid->stack_actor(qube3, 1, -1);
+
+    mainScene.add_actor(grid);
 
     bool running = true;
     const int kTicksPerFrame = 1000 / 60;

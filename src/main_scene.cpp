@@ -42,9 +42,9 @@ void MainScene::update()
     }
 }
 
-void MainScene::add_actor(std::unique_ptr<Actor> &&a)
+void MainScene::add_actor(ActorPtr a)
 {
-    _actors.push_back(std::move(a));
+    _actors.push_back(a);
 }
 
 void MainScene::set_scale(float scale)
@@ -57,7 +57,7 @@ void MainScene::render()
     SDL_SetRenderDrawColor(_renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(_renderer);
 
-    for (std::unique_ptr<Actor> &a : _actors) {
+    for (ActorPtr &a : _actors) {
         a->render(_renderer);
     }
 

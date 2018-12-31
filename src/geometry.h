@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <string>
 #include <vector>
 #include <math.h>
 
@@ -30,6 +31,11 @@ struct Rect
         rect.h = height;
 
         return rect;
+    };
+
+    std::string to_string() const {
+        return "Rect(" + std::to_string(x) + ", " + std::to_string(y) 
+                       + ", " + std::to_string(width) + ", " + std::to_string(height) + ")";
     };
 };
 

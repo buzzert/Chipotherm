@@ -20,5 +20,7 @@ public:
 protected:
     std::shared_ptr<cairo_t>     _cairo_ctx;
     std::shared_ptr<SDL_Surface> _surface;
+
+    void generate_surface();
 };
 

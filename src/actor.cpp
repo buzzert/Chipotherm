@@ -7,5 +7,11 @@
 #include "actor.h"
 
 Actor::Actor(Rect rect)
-    : rect(rect), alpha(1.0)
+    : rect(rect), alpha(1.0), needs_display(true)
 {}
+
+void Actor::set_rect(Rect r)
+{
+    rect = r;
+    needs_display = true;
+}

@@ -21,7 +21,7 @@ public:
     MainScene(Rect canvasRect, bool windowed);
     ~MainScene();
 
-    void add_actor(std::unique_ptr<Actor>&& actor);
+    void add_actor(ActorPtr actor);
     void set_scale(float scale);
 
     void update();
@@ -31,7 +31,7 @@ private:
     SDL_Window   *_window;
     SDL_Renderer *_renderer;
 
-    std::vector<std::unique_ptr<Actor>> _actors;
+    std::vector<ActorPtr> _actors;
 
     Rect _canvasRect;
 };

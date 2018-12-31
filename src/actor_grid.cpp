@@ -6,8 +6,10 @@
 
 #include "actor_grid.h"
 
+#include <iostream>
+
 ActorGrid::ActorGrid(Rect r, unsigned cols)
-    : Actor(r), _cols(cols)
+    : Actor(r), _cols(cols), _grid(cols)
 {
 
 }
@@ -95,10 +97,12 @@ void ActorGrid::layout_if_needed()
                 r.height = flexible_item_height;
             }
 
-            item.actor->rect = rect;
+            item.actor->set_rect(r);
             y_offset += r.height;
         }
 
         x_offset += column_width;
     }
+
+    _needs_layout = false;
 }

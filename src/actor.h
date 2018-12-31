@@ -23,6 +23,10 @@ public:
     virtual void update(SDL_Renderer *renderer) {};
     virtual void render(SDL_Renderer *renderer) {};
 
-    Rect rect;
+    void set_rect(Rect r);
+
+protected: 
+    Rect  rect;
     float alpha;
+    bool  needs_display;
 };
