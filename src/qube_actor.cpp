@@ -19,7 +19,7 @@ void QubeActor::update(SDL_Renderer *renderer)
     _time_offset += 0.01;
 }
 
-void QubeActor::render(SDL_Renderer *renderer)
+void QubeActor::render(SDL_Renderer *renderer, Rect at_rect)
 {
     cairo_t *cr = _cairo_ctx.get();
 
@@ -29,7 +29,7 @@ void QubeActor::render(SDL_Renderer *renderer)
 
     draw_tetrahedron(rect.width / 2, rect.height / 2, rect.height / 2, _time_offset);
 
-    CairoActor::render(renderer);
+    CairoActor::render(renderer, at_rect);
 }
 
 void QubeActor::draw_line(double x1, double y1, double x2, double y2, double size)

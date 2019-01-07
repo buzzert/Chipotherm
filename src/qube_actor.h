@@ -20,7 +20,7 @@ public:
     QubeActor(Rect rect);
 
     void update(SDL_Renderer *renderer) override;
-    void render(SDL_Renderer *renderer) override;
+    void render(SDL_Renderer *renderer, Rect at_rect) override;
 
 private:
     double _time_offset;
