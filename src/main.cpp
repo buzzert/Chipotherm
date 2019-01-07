@@ -35,11 +35,11 @@ int main(int argc, char **argv)
 
     auto grid = std::make_shared<ActorGrid>(Rect(0, 0, canvasWidth, canvasHeight), 2);
 
-    auto qube1 = std::make_shared<QubeActor>(Rect());
-    grid->stack_actor(qube1, 0, -1);
-    
     auto clock_actor = std::make_shared<ClockActor>(Rect());
     grid->stack_actor(clock_actor, 0, -1);
+
+    auto qube1 = std::make_shared<QubeActor>(Rect());
+    grid->stack_actor(qube1, 0, -1);
 
     auto label = std::make_shared<LabelActor>(Rect(), "CHIP thermostat");
     label->set_font_prop("Karla 18");

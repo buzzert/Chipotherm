@@ -41,9 +41,14 @@ void ClockActor::display_surface()
     CairoActor::display_surface();
 
     cairo_t *cr = _cairo_ctx.get();
-    cairo_paint(cr);
+
+    const double padding = 10.0;
+    const double line_width = 2.0;
+    cairo_set_line_width(cr, line_width);
     cairo_set_source_rgb(cr, 0.0, 0.0, 1.0);
-    // todo: draw line
+    cairo_move_to(cr, padding, rect.height - line_width - padding);
+    cairo_line_to(cr, rect.width - (padding * 2.0), rect.height - line_width - padding);
+    cairo_stroke(cr);
 }
 
 void ClockActor::layout_actors()
