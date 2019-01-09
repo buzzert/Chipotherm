@@ -36,8 +36,15 @@ int main(int argc, char **argv)
 
     auto grid = std::make_shared<ActorGrid>(Rect(0, 0, canvasWidth, canvasHeight), 2);
 
+    auto subgrid = std::make_shared<ActorGrid>(Rect(), 1);
+    subgrid->set_orientation(ActorGrid::Orientation::HORIZONTAL);
+    grid->stack_actor(subgrid, 0, -1);
+
+    auto qube_s = std::make_shared<QubeActor>(Rect());
+    subgrid->stack_actor(qube_s, 0, 50);
+
     auto clock_actor = std::make_shared<ClockActor>(Rect());
-    grid->stack_actor(clock_actor, 0, -1);
+    subgrid->stack_actor(clock_actor, 0, -1);
 
     auto qube1 = std::make_shared<QubeActor>(Rect());
     qube1->color = Palette::foreground;

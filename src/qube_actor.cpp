@@ -27,7 +27,8 @@ void QubeActor::render(SDL_Renderer *renderer, Rect at_rect)
     cairo_set_source_rgb(cr, 0, 0, 0);
     cairo_paint(cr);
 
-    draw_tetrahedron(rect.width / 2, rect.height / 2, rect.height / 2, _time_offset);
+    double radius = MIN(rect.height, rect.width) / 2;
+    draw_tetrahedron(rect.width / 2, rect.height / 2, radius, _time_offset);
 
     CairoActor::render(renderer, at_rect);
 }
