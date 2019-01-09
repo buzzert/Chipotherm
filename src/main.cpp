@@ -11,6 +11,7 @@
 #include <memory>
 
 #include "clock_actor.h"
+#include "palette.h"
 #include "qube_actor.h"
 #include <bubbles/bubbles.h>
 
@@ -39,6 +40,7 @@ int main(int argc, char **argv)
     grid->stack_actor(clock_actor, 0, -1);
 
     auto qube1 = std::make_shared<QubeActor>(Rect());
+    qube1->color = Palette::foreground;
     grid->stack_actor(qube1, 0, -1);
 
     auto label = std::make_shared<LabelActor>(Rect(), "CHIP thermostat");

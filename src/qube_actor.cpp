@@ -10,7 +10,7 @@
 #include <iostream>
 
 QubeActor::QubeActor(Rect rect)
-    : CairoActor(rect)
+    : CairoActor(rect), color(0xFF, 0x00, 0x00, 0xFF)
 {
 }
 
@@ -67,7 +67,7 @@ void QubeActor::draw_mesh(
     }
 
     // Draw lines connecting the points
-    cairo_set_source_rgb(_cairo_ctx.get(), 0.0, 0.0, 0.7);
+    cairo_set_source_rgba(_cairo_ctx.get(), CAIRO_COLOR(color));
     for (std::pair<unsigned int, unsigned int> edge : edges) {
         double x1 = vertices[edge.first].x * scale;
         double y1 = vertices[edge.first].y * scale;
@@ -79,7 +79,7 @@ void QubeActor::draw_mesh(
     }
 
     // Now draw points
-    cairo_set_source_rgb(_cairo_ctx.get(), 0.0, 0.0, 1.0);
+    cairo_set_source_rgba(_cairo_ctx.get(), CAIRO_COLOR(color));
     for (const Vec3 &point : vertices) {
         draw_point(x + point.x * scale, y + point.y * scale, point_size);
     }
@@ -105,5 +105,5 @@ void QubeActor::draw_tetrahedron(double cx, double cy, double radius, double tim
         { 3, 1 }
     };
 
-    draw_mesh(cx, cy, vertices, edges, radius, Color(0, 0, 0xFF, 0xFF), time_offset);
+    draw_mesh(cx, cy, vertices, edges, radius, color, time_offset);
 }

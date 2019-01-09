@@ -22,6 +22,8 @@ public:
     void update(SDL_Renderer *renderer) override;
     void render(SDL_Renderer *renderer, Rect at_rect) override;
 
+    Color color;
+
 private:
     double _time_offset;
 

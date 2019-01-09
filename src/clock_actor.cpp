@@ -5,13 +5,15 @@
  */
 
 #include "clock_actor.h"
+#include "palette.h"
 
 BUBBLES_NAMESPACE_BEGIN
 
 ClockActor::ClockActor(Rect r)
     : CairoActor(r)
 {
-    _label = std::make_shared<LabelActor>(r, "hey");
+    _label = std::make_shared<LabelActor>(r, "");
+    _label->set_foreground_color(Palette::foreground);
     _label->set_alignment(PANGO_ALIGN_CENTER);
     add_subactor(_label);
 }
@@ -45,7 +47,7 @@ void ClockActor::display_surface()
     const double padding = 10.0;
     const double line_width = 2.0;
     cairo_set_line_width(cr, line_width);
-    cairo_set_source_rgb(cr, 0.0, 0.0, 1.0);
+    cairo_set_source_rgba(cr, CAIRO_COLOR(Palette::foreground));
     cairo_move_to(cr, padding, rect.height - line_width - padding);
     cairo_line_to(cr, rect.width - (padding * 2.0), rect.height - line_width - padding);
     cairo_stroke(cr);
