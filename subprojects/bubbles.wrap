@@ -1,0 +1,5 @@
+[wrap-git]
+directory = bubbles 
+url = buzzert@buzzert.net:repos/bubbles
+revision = head
+
