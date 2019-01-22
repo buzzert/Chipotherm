@@ -1,4 +1,6 @@
-project('chipotherm', 'cpp')
+project('chipotherm', 'cpp',
+    default_options: ['cpp_std=c++14'],
+)
 
 libbubbles_proj = subproject('bubbles')
 libbubbles_dep  = libbubbles_proj.get_variable('bubbles_dep')
