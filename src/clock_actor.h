@@ -8,19 +8,18 @@
 
 #include <chrono>
 
-#include <bubbles/actor/cairo_actor.h>
 #include <bubbles/actor/label_actor.h>
 
 BUBBLES_NAMESPACE_BEGIN
 
-class ClockActor : public CairoActor
+class ClockActor : public Actor
 {
 public:
     ClockActor(Rect r);
 
-    void update(SDL_Renderer *renderer) override;
+    void update() override;
+    void render(cairo_t *cr, Rect at_rect) override;
     void layout_actors() override;
-    void display_surface() override;
 private:
     std::shared_ptr<LabelActor> _label;
 

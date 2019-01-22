@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     subgrid->stack_actor(clock_actor, 0, -1);
 
     auto qube1 = std::make_shared<QubeActor>(Rect());
-    qube1->color = Palette::foreground;
+    qube1->set_color(Palette::foreground);
     grid->stack_actor(qube1, 0, -1);
 
     auto label = std::make_shared<LabelActor>(Rect(), "CHIP thermostat");

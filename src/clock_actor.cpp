@@ -10,7 +10,7 @@
 BUBBLES_NAMESPACE_BEGIN
 
 ClockActor::ClockActor(Rect r)
-    : CairoActor(r)
+    : Actor(r)
 {
     _label = std::make_shared<LabelActor>(r, "");
     _label->set_foreground_color(Palette::foreground);
@@ -18,9 +18,9 @@ ClockActor::ClockActor(Rect r)
     add_subactor(_label);
 }
 
-void ClockActor::update(SDL_Renderer *renderer)
+void ClockActor::update()
 {
-    CairoActor::update(renderer);
+    Actor::update();
 
     TimePoint now = Clock::now();
     if ( (now - last_update) > std::chrono::seconds(1) ) {
@@ -38,11 +38,9 @@ void ClockActor::update(SDL_Renderer *renderer)
     }
 }
 
-void ClockActor::display_surface()
+void ClockActor::render(cairo_t *cr, Rect at_rect)
 {
-    CairoActor::display_surface();
-
-    cairo_t *cr = _cairo_ctx.get();
+    Actor::render(cr, at_rect);
 
     const double padding = 10.0;
     const double line_width = 2.0;

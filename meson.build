@@ -5,6 +5,7 @@ libbubbles_dep  = libbubbles_proj.get_variable('bubbles_dep')
 
 chipotherm_deps = [
     libbubbles_dep,
+    dependency('pangocairo'),
 ]
 
 chipotherm_sources = [
@@ -21,5 +22,4 @@ chipotherm_bin = executable('chipotherm',
     dependencies: chipotherm_deps,
     install: true
 )
-
 
