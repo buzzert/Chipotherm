@@ -3,7 +3,7 @@ c = '/usr/bin/arm-linux-gnueabihf-gcc'
 cpp = '/usr/bin/arm-linux-gnueabihf-g++'
 ar = '/usr/arm-linux-gnueabihf/bin/ar'
 strip = '/usr/arm-linux-gnueabihf/bin/strip'
-pkgconfig = '/usr/bin/i686-pc-linux-gnu-pkg-config'
+pkgconfig = 'utils/arm-pkg-config'
 
 [properties]
 root = '/usr/arm-linux-gnueabihf'

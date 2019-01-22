@@ -6,7 +6,6 @@
 
 #include "qube_actor.h"
 
-#include <SDL2/SDL.h>
 #include <iostream>
 
 QubeActor::QubeActor(Rect rect)
