@@ -9,4 +9,10 @@ This basically bootstraps an entire debian into /var/jessie_armhf. You should th
 
 Then, use /var/jessie_armhf as the sysroot for pkg-config and you should be able to get the right library paths. Use this *in combination* with the cross-compile toolchain on the host machine (arm-linux-gnueabihf-gcc)
 
+NEXT STEPS
+I successfully built an arm executable that the interpreter seems to be happy with on the actual CHIP itself, but because I used stretch instead of jessie, it's complaining about the wrong GLIB version.
+
+I think I better just figure out how to get recent meson/ninja to run on jessie. It should be a lot easier than this.
+
+Right now the way I'm compiling is: on my desktop via the Debian 32-bit VM, chroot into /var/jessie_armhf and do all the building in there.
 
