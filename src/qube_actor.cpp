@@ -9,7 +9,7 @@
 #include <iostream>
 
 QubeActor::QubeActor(Rect rect)
-    : Actor(rect), _color(Color(0x00, 0x00, 0x00, 0xFF))
+    : Actor(rect), _color(Color(0xFF, 0x00, 0x00, 0xFF))
 {
 }
 
@@ -21,7 +21,9 @@ void QubeActor::update()
 void QubeActor::render(cairo_t *cr, Rect at_rect)
 {
     Actor::render(cr, at_rect);
-    draw_tetrahedron(cr, rect.width / 2, rect.height / 2, rect.height / 2, _time_offset);
+
+    double radius = MIN(rect.width, rect.height) / 2.0;
+    draw_tetrahedron(cr, rect.width / 2, rect.height / 2, radius, _time_offset);
 }
 
 void QubeActor::draw_line(cairo_t *cr, double x1, double y1, double x2, double y2, double size)

@@ -32,6 +32,7 @@ int main(int argc, char **argv)
 
     MainScene mainScene(canvasRect, windowed);
     mainScene.set_scale(scale);
+    mainScene.set_hides_cursor(true);
 
     auto grid = std::make_shared<ActorGrid>(Rect(0, 0, canvasWidth, canvasHeight), 2);
 

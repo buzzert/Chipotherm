@@ -22,14 +22,13 @@ void ClockActor::update()
 {
     Actor::update();
 
+    struct tm *timeinfo;
+    time_t now_time;
+    std::string time_str(32, 0);
     TimePoint now = Clock::now();
     if ( (now - last_update) > std::chrono::seconds(1) ) {
         last_update = now;
 
-        time_t now_time;
-        struct tm *timeinfo;
-
-        std::string time_str(32, 0);
         time(&now_time);
         timeinfo = localtime(&now_time);
         strftime(&time_str[0], time_str.size(), "%H:%M:%S", timeinfo);

@@ -9,5 +9,9 @@ Build with a qemu chroot using Debian Jessie. See "crosscompiling_notes.txt".
 bubbles
 
 ## Requirements
-libsdl2-dev libsdl-pango-dev libsdl2-image-dev
+libsdl2-dev libsdl-pango-dev libsdl2-image-dev 
+
+## Temperature sensor
+Having some good luck so far with this library:
+https://github.com/hbt/TEMPered
 
