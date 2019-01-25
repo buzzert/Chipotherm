@@ -11,12 +11,14 @@ chipotherm_deps = [
 ]
 
 chipotherm_sources = [
+    'src/clock_actor.h',
     'src/clock_actor.cpp',
+    'src/graph_actor.h',
+    'src/graph_actor.cpp',
     'src/main.cpp',
     'src/palette.h',
     'src/qube_actor.h',
     'src/qube_actor.cpp',
-    'src/clock_actor.h',
 ]
 
 chipotherm_bin = executable('chipotherm',

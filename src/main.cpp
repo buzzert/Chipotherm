@@ -5,11 +5,13 @@
  */
 
 #include <cassert>
+#include <cstdlib>
 #include <libgen.h>
 #include <memory>
 #include <string.h>
 
 #include "clock_actor.h"
+#include "graph_actor.h"
 #include "palette.h"
 #include "qube_actor.h"
 #include <bubbles/bubbles.h>
@@ -23,7 +25,7 @@ int main(int argc, char **argv)
     const int canvasHeight = 272;
     const float scale = 2.0; // for testing on hiDPI
 
-    bool windowed = false;
+    bool windowed = true;
     if (argc > 1 && strcmp("-w", argv[1]) == 0) {
         windowed = true;
     }
@@ -32,23 +34,22 @@ int main(int argc, char **argv)
 
     MainScene mainScene(canvasRect, windowed);
     mainScene.set_scale(scale);
-    mainScene.set_hides_cursor(true);
+    if (!windowed) {
+        mainScene.set_hides_cursor(true);
+    }
 
     auto grid = std::make_shared<ActorGrid>(Rect(0, 0, canvasWidth, canvasHeight), 2);
 
-    auto subgrid = std::make_shared<ActorGrid>(Rect(), 1);
-    subgrid->set_orientation(ActorGrid::Orientation::HORIZONTAL);
-    grid->stack_actor(subgrid, 0, -1);
-
-    auto qube_s = std::make_shared<QubeActor>(Rect());
-    subgrid->stack_actor(qube_s, 0, 50);
-
     auto clock_actor = std::make_shared<ClockActor>(Rect());
-    subgrid->stack_actor(clock_actor, 0, -1);
+    grid->stack_actor(clock_actor, 0, -1);
 
-    auto qube1 = std::make_shared<QubeActor>(Rect());
-    qube1->set_color(Palette::foreground);
-    grid->stack_actor(qube1, 0, -1);
+    auto graph_actor = std::make_shared<GraphActor>(Rect());
+    std::srand(std::time(nullptr));
+    for (unsigned i = 0; i < 100; i++) {
+        double val = fmod(std::rand(), 100);
+        graph_actor->add_sample(val);
+    }
+    grid->stack_actor(graph_actor, 0);
 
     auto label = std::make_shared<LabelActor>(Rect(), "CHIP thermostat");
     label->set_font_prop("Karla 18");
