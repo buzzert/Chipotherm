@@ -11,6 +11,8 @@ chipotherm_deps = [
 ]
 
 chipotherm_sources = [
+    'src/button_actor.h',
+    'src/button_actor.cpp',
     'src/clock_actor.h',
     'src/clock_actor.cpp',
     'src/graph_actor.h',
@@ -26,4 +28,3 @@ chipotherm_bin = executable('chipotherm',
     dependencies: chipotherm_deps,
     install: true
 )
-

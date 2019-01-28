@@ -10,6 +10,7 @@
 #include <memory>
 #include <string.h>
 
+#include "button_actor.h"
 #include "clock_actor.h"
 #include "graph_actor.h"
 #include "palette.h"
@@ -39,6 +40,8 @@ int main(int argc, char **argv)
     }
 
     auto grid = std::make_shared<ActorGrid>(Rect(0, 0, canvasWidth, canvasHeight), 2);
+    auto qube3 = std::make_shared<QubeActor>(Rect());
+    grid->stack_actor(qube3, 0, -1);
 
     auto clock_actor = std::make_shared<ClockActor>(Rect());
     grid->stack_actor(clock_actor, 0, -1);
@@ -56,8 +59,11 @@ int main(int argc, char **argv)
     label->set_foreground_color(Color(0xFF, 0x00, 0xFF, 0xFF));
     grid->stack_actor(label, 1, -1);
 
-    auto qube3 = std::make_shared<QubeActor>(Rect());
-    grid->stack_actor(qube3, 1, -1);
+    auto button = std::make_shared<ButtonActor>(RECT_ZERO);
+    button->set_label_text("HEAT ON");
+    button->set_foreground_color(Palette::foreground);
+    grid->stack_actor(button, 1);
+
 
     mainScene.add_actor(grid);
 
