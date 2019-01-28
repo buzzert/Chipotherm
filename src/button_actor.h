@@ -18,12 +18,14 @@ public:
     void set_label_text(const std::string &str);
     void set_foreground_color(Color c) { _foreground_color = c; };
     void set_highlighted(bool highlighted) { _highlighted = highlighted; };
+
     void render(cairo_t *cr, Rect at_rect) override;
+    void layout_actors() override;
 
 private:
-    ActorGrid  _grid;
-    bool       _highlighted;
-    LabelActor _label;
+    std::shared_ptr<LabelActor> _label;
+
+    bool       _highlighted = false;
     Color      _foreground_color;
 };
 

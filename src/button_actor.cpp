@@ -9,19 +9,26 @@
 BUBBLES_NAMESPACE_BEGIN
 
 ButtonActor::ButtonActor(Rect r)
-    : Actor(r), _label(RECT_ZERO, ""), _foreground_color(Color(0xFF, 0xFF, 0xFF, 0xFF)),
-      _grid(RECT_ZERO, 1)
+    : Actor(r),
+      _label(std::make_shared<LabelActor>(RECT_ZERO, "")),
+      _foreground_color(Color(0xFF, 0xFF, 0xFF, 0xFF))
 {
-    ActorPtr grid_p = std::shared_ptr<Actor>(&_grid);
-    add_subactor(grid_p);
-
-    ActorPtr label_p = std::shared_ptr<Actor>(&_label);
-    _grid.stack_actor(label_p, 0);
+    _label->set_alignment(PangoAlignment::PANGO_ALIGN_CENTER);
+    add_subactor(_label);
 }
 
 void ButtonActor::set_label_text(const std::string &str)
 {
-    _label.set_contents(str);
+    _label->set_contents(str);
+    _needs_layout = true;
+}
+
+void ButtonActor::layout_actors()
+{
+    Actor::layout_actors();
+
+    Rect bounds = Rect(0, 0, rect.width, rect.height);
+    _label->set_rect(bounds);
 }
 
 void ButtonActor::render(cairo_t *cr, Rect at_rect)
@@ -29,7 +36,7 @@ void ButtonActor::render(cairo_t *cr, Rect at_rect)
     // Draw background
     double width = rect.width;
     double height = rect.height;
-    double cornerRadius = height / 10.0;
+    double cornerRadius = 16.0;
     double padding = 8.0;
     width -= padding * 2.0;
     height -= padding * 2.0;
@@ -43,8 +50,10 @@ void ButtonActor::render(cairo_t *cr, Rect at_rect)
 
     _foreground_color.set_source(cr);
     if (_highlighted) {
+        _label->set_foreground_color(_background_color);
         cairo_fill(cr);
     } else {
+        _label->set_foreground_color(_foreground_color);
         cairo_set_line_width(cr, 2.0);
         cairo_stroke(cr);
     }
@@ -53,3 +62,4 @@ void ButtonActor::render(cairo_t *cr, Rect at_rect)
 }
 
 BUBBLES_NAMESPACE_END
+

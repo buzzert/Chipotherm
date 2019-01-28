@@ -54,16 +54,10 @@ int main(int argc, char **argv)
     }
     grid->stack_actor(graph_actor, 0);
 
-    auto label = std::make_shared<LabelActor>(Rect(), "CHIP thermostat");
-    label->set_font_prop("Karla 18");
-    label->set_foreground_color(Color(0xFF, 0x00, 0xFF, 0xFF));
-    grid->stack_actor(label, 1, -1);
-
     auto button = std::make_shared<ButtonActor>(RECT_ZERO);
     button->set_label_text("HEAT ON");
     button->set_foreground_color(Palette::foreground);
     grid->stack_actor(button, 1);
-
 
     mainScene.add_actor(grid);
 
