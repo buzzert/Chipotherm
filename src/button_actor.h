@@ -7,6 +7,8 @@
 #pragma once
 
 #include <bubbles/bubbles.h>
+#include <functional>
+#include <sigc++/sigc++.h>
 
 BUBBLES_NAMESPACE_BEGIN
 
@@ -21,6 +23,11 @@ public:
 
     void render(cairo_t *cr, Rect at_rect) override;
     void layout_actors() override;
+
+    void mouse_down(int x, int y) override;
+    void mouse_up(int x, int y) override;
+
+    sigc::signal<void> clicked;
 
 private:
     std::shared_ptr<LabelActor> _label;

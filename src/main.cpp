@@ -16,6 +16,7 @@
 #include "palette.h"
 #include "qube_actor.h"
 #include <bubbles/bubbles.h>
+#include <sigc++/sigc++.h>
 
 using namespace Bubbles;
 
@@ -57,6 +58,9 @@ int main(int argc, char **argv)
     auto button = std::make_shared<ButtonActor>(RECT_ZERO);
     button->set_label_text("HEAT ON");
     button->set_foreground_color(Palette::foreground);
+    button->clicked.connect(sigc::slot<void>([]() {
+        printf("button clicked\n");
+    }));
     grid->stack_actor(button, 1);
 
     mainScene.add_actor(grid);

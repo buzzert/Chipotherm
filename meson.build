@@ -8,6 +8,7 @@ libbubbles_dep  = libbubbles_proj.get_variable('bubbles_dep')
 chipotherm_deps = [
     libbubbles_dep,
     dependency('pangocairo'),
+    dependency('sigc++-2.0'),
 ]
 
 chipotherm_sources = [

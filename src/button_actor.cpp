@@ -31,6 +31,19 @@ void ButtonActor::layout_actors()
     _label->set_rect(bounds);
 }
 
+void ButtonActor::mouse_down(int x, int y)
+{
+    set_highlighted(true);
+}
+
+void ButtonActor::mouse_up(int x, int y)
+{
+    set_highlighted(false);
+    if (rect.point_inside(x, y)) {
+        clicked();
+    }
+}
+
 void ButtonActor::render(cairo_t *cr, Rect at_rect)
 {
     // Draw background
@@ -50,7 +63,7 @@ void ButtonActor::render(cairo_t *cr, Rect at_rect)
 
     _foreground_color.set_source(cr);
     if (_highlighted) {
-        _label->set_foreground_color(_background_color);
+        _label->set_foreground_color(Color(0x00, 0x00, 0x00, 0xFF));
         cairo_fill(cr);
     } else {
         _label->set_foreground_color(_foreground_color);
