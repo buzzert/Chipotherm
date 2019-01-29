@@ -11,6 +11,8 @@
 
 using namespace Bubbles;
 
+DEF_SHARED_PTR(RoundedTitleActor)
+
 class RoundedTitleActor : public Actor 
 {
 public:

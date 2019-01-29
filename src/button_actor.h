@@ -22,6 +22,7 @@ public:
     void set_label_text(const std::string &str);
     void set_foreground_color(Color c) { _foreground_color = c; };
     void set_highlighted(bool highlighted) { _highlighted = highlighted; };
+    void set_filled(bool filled) { _filled = filled; };
 
     void render(cairo_t *cr, Rect at_rect) override;
     void layout_actors() override;
@@ -34,6 +35,7 @@ public:
 private:
     LabelActorPtr _label;
 
+    bool       _filled = false;
     bool       _highlighted = false;
     Color      _foreground_color;
 };

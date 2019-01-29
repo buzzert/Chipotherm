@@ -39,7 +39,7 @@ void ButtonActor::mouse_up(int x, int y)
 {
     set_highlighted(false);
     if (rect.point_inside(x, y)) {
-        clicked();
+       clicked();
     }
 }
 
@@ -48,6 +48,12 @@ void ButtonActor::render(cairo_t *cr, Rect at_rect)
     // Draw background
     double padding = 8.0;
     Palette::draw_rounded_rect(cr, get_bounds().inset_by(padding, padding), Palette::corner_radius);
+
+    if (_filled && !_highlighted) {
+        Color fg = _foreground_color;
+        cairo_set_source_rgba(cr, fg.red / 255.0, fg.green / 255.0, fg.blue / 255.0, 0.3);
+        cairo_fill(cr);
+    }
 
     _foreground_color.set_source(cr);
     if (_highlighted) {

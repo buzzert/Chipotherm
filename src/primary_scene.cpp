@@ -8,12 +8,10 @@
 
 #include <memory>
 
-#include "button_actor.h"
 #include "clock_actor.h"
 #include "graph_actor.h"
 #include "palette.h"
 #include "qube_actor.h"
-#include "rounded_title_actor.h"
 
 ActorGridPtr PrimaryScene::initialize_status_grid()
 {
@@ -54,18 +52,19 @@ ActorGridPtr PrimaryScene::initialize_statistics_grid()
         auto qube3 = std::make_shared<QubeActor>(Rect());
         temp_stack->stack_actor(qube3, 0);
 
-        auto current = std::make_shared<RoundedTitleActor>(RECT_ZERO, "CURRENT");
+        RoundedTitleActorPtr current = std::make_shared<RoundedTitleActor>(RECT_ZERO, "CURRENT");
         current->get_label()->set_contents("69");
         current->set_foreground_color(Palette::foreground);
         current->set_filled(true);
         temp_stack->stack_actor(current, 0);
+        _current_temp_indicator = current;
 
-        auto target = std::make_shared<RoundedTitleActor>(RECT_ZERO, "TARGET");
+        RoundedTitleActorPtr target = std::make_shared<RoundedTitleActor>(RECT_ZERO, "TARGET");
         target->pulsing = true;
         target->get_label()->set_contents("80");
-        target->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
         target->set_filled(true);
         temp_stack->stack_actor(target, 0);
+        _target_temp_indicator = target;
     }
 
     // Graph
@@ -86,13 +85,15 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
 
     // Heat ON button 
     {
-        auto heat_button = std::make_shared<ButtonActor>(RECT_ZERO);
-        heat_button->set_label_text("HEAT ON");
-        heat_button->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
-        heat_button->clicked.connect(sigc::slot<void>([]() {
-            printf("button clicked\n");
+        _heat_button = std::make_shared<ButtonActor>(RECT_ZERO);
+        _heat_button->set_label_text("HEAT ON");
+        _heat_button->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
+        _heat_button->clicked.connect(sigc::slot<void>([this]() {
+            bool heat_on = _controller.get_heater_on();
+            _controller.set_heater_on(!heat_on);
+            update_ui_state();
         }));
-        grid->stack_actor(heat_button, 0, 160);
+        grid->stack_actor(_heat_button, 0, 160);
     }
 
     // Temperature adjustment
@@ -119,6 +120,8 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
 PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
     : MainScene(canvas_rect, windowed, scale)
 {
+    _controller.simulate = true;
+
     Rect canvasRect(0, 0, canvas_rect.width, canvas_rect.height);
 
     auto main_grid = std::make_shared<ActorGrid>(canvasRect, 1);
@@ -144,5 +147,29 @@ PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
         panel_grid->stack_actor(controls_grid, 0);
     }
 
+    update_ui_state();
+}
 
+void PrimaryScene::update_ui_state()
+{
+    float current_temp = _controller.read_temperature();
+
+    std::string temp_string = "999";
+    snprintf(&temp_string[0], 3, "%.0f", current_temp);
+    _current_temp_indicator->get_label()->set_contents(temp_string);
+
+    bool heat_on = _controller.get_heater_on();
+    _target_temp_indicator->pulsing = heat_on;
+
+    if (heat_on) {
+        _target_temp_indicator->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
+
+        _heat_button->set_label_text("HEAT OFF");
+        _heat_button->set_filled(true);
+    } else {
+        _target_temp_indicator->set_foreground_color(Color(0xFF, 0x00, 0x00, 0x55));
+
+        _heat_button->set_label_text("HEAT ON");
+        _heat_button->set_filled(false);
+    }
 }

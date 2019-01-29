@@ -88,6 +88,8 @@ void RoundedTitleActor::render(cairo_t *cr, Rect in_rect)
         Color bg = _foreground_color;
         bg.red = 255 * inv_progress;
         _label->set_foreground_color(bg);
+    } else {
+        set_filled(_filled);
     }
 
     if (_filled) {

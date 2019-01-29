@@ -18,6 +18,7 @@ chipotherm_sources = [
     'src/clock_actor.cpp',
     'src/graph_actor.h',
     'src/graph_actor.cpp',
+    'src/io_control.cpp',
     'src/main.cpp',
     'src/palette.h',
     'src/palette.cpp',
