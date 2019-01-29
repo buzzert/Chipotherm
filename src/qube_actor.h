@@ -14,6 +14,8 @@
 
 using namespace Bubbles;
 
+DEF_SHARED_PTR(QubeActor)
+
 class QubeActor : public Actor
 {
 public:

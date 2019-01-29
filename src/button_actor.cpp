@@ -7,8 +7,6 @@
 #include "button_actor.h"
 #include "palette.h"
 
-BUBBLES_NAMESPACE_BEGIN
-
 ButtonActor::ButtonActor(Rect r)
     : Actor(r),
       _label(std::make_shared<LabelActor>(RECT_ZERO, "")),
@@ -53,7 +51,7 @@ void ButtonActor::render(cairo_t *cr, Rect at_rect)
     double cornerRadius = 16.0;
     double padding = 8.0;
 
-    Palette::draw_rounded_rect(cr, width, height, cornerRadius, padding);
+    Palette::draw_rounded_rect(cr, get_bounds().inset_by(padding, padding), cornerRadius);
 
     _foreground_color.set_source(cr);
     if (_highlighted) {
@@ -67,6 +65,3 @@ void ButtonActor::render(cairo_t *cr, Rect at_rect)
 
     Actor::render(cr, at_rect);
 }
-
-BUBBLES_NAMESPACE_END
-

@@ -10,7 +10,9 @@
 #include <functional>
 #include <sigc++/sigc++.h>
 
-BUBBLES_NAMESPACE_BEGIN
+using namespace Bubbles;
+
+DEF_SHARED_PTR(ButtonActor)
 
 class ButtonActor : public Actor
 {
@@ -30,11 +32,9 @@ public:
     sigc::signal<void> clicked;
 
 private:
-    std::shared_ptr<LabelActor> _label;
+    LabelActorPtr _label;
 
     bool       _highlighted = false;
     Color      _foreground_color;
 };
-
-BUBBLES_NAMESPACE_END
 

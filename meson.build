@@ -21,6 +21,8 @@ chipotherm_sources = [
     'src/main.cpp',
     'src/palette.h',
     'src/palette.cpp',
+    'src/primary_scene.h',
+    'src/primary_scene.cpp',
     'src/qube_actor.h',
     'src/qube_actor.cpp',
     'src/rounded_title_actor.h',

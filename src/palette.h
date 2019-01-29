@@ -15,6 +15,6 @@ namespace Palette {
     static const std::string sector_label_font("Exan 8");
     static const Bubbles::Size sector_label_padding(5, 5);
 
-    void draw_rounded_rect(cairo_t *cr,   double width, 
-                           double height, double radius, double padding);
+    // TODO: Might not be the right place for this
+    void draw_rounded_rect(cairo_t *cr, Bubbles::Rect rect, double radius);
 }

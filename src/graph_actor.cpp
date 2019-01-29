@@ -9,8 +9,6 @@
 
 #include <limits>
 
-BUBBLES_NAMESPACE_BEGIN
-
 GraphActor::GraphActor(Rect r)
     : Actor(r)
 {
@@ -77,5 +75,3 @@ void GraphActor::render(cairo_t *cr, Rect at_rect)
     cairo_stroke(cr);
 }
 
-BUBBLES_NAMESPACE_END
- 

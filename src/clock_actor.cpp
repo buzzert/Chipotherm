@@ -7,8 +7,6 @@
 #include "clock_actor.h"
 #include "palette.h"
 
-BUBBLES_NAMESPACE_BEGIN
-
 ClockActor::ClockActor(Rect r)
     : Actor(r)
 {
@@ -42,6 +40,7 @@ void ClockActor::render(cairo_t *cr, Rect at_rect)
 {
     Actor::render(cr, at_rect);
 
+    /*
     const double padding = 10.0;
     const double line_width = 2.0;
     cairo_set_line_width(cr, line_width);
@@ -49,6 +48,7 @@ void ClockActor::render(cairo_t *cr, Rect at_rect)
     cairo_move_to(cr, padding, rect.height - line_width - padding);
     cairo_line_to(cr, rect.width - (padding * 2.0), rect.height - line_width - padding);
     cairo_stroke(cr);
+    */
 }
 
 void ClockActor::layout_actors()
@@ -58,6 +58,4 @@ void ClockActor::layout_actors()
     Rect label_rect(0, 0, bounds.width, bounds.height);
     _label->set_rect(label_rect);
 }
-
-BUBBLES_NAMESPACE_END
 

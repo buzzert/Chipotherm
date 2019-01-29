@@ -10,7 +10,9 @@
 
 #include <bubbles/actor/label_actor.h>
 
-BUBBLES_NAMESPACE_BEGIN
+using namespace Bubbles;
+
+DEF_SHARED_PTR(ClockActor)
 
 class ClockActor : public Actor
 {
@@ -27,5 +29,3 @@ private:
     using TimePoint = std::chrono::time_point<Clock>;
     TimePoint last_update;
 };
-
-BUBBLES_NAMESPACE_END

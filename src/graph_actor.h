@@ -8,7 +8,9 @@
 
 #include <bubbles/bubbles.h>
 
-BUBBLES_NAMESPACE_BEGIN
+using namespace Bubbles;
+
+DEF_SHARED_PTR(GraphActor);
 
 class GraphActor : public Actor
 {
@@ -30,5 +32,4 @@ private:
     std::vector<Sample> _samples;
 };
 
-BUBBLES_NAMESPACE_END
 
