@@ -13,10 +13,12 @@ BUBBLES_NAMESPACE_BEGIN
 class GraphActor : public Actor
 {
 public:
-    GraphActor(Rect r) : Actor(r) {};
+    GraphActor(Rect r);
     void render(cairo_t *cr, Rect at_rect) override;
 
     void add_sample(double value);
+
+    void layout_actors() override;
 
 private:
     struct Sample {
@@ -24,6 +26,7 @@ private:
         // timestaemp?
     };
 
+    std::shared_ptr<LabelActor> _label;
     std::vector<Sample> _samples;
 };
 

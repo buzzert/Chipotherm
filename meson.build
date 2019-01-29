@@ -20,8 +20,11 @@ chipotherm_sources = [
     'src/graph_actor.cpp',
     'src/main.cpp',
     'src/palette.h',
+    'src/palette.cpp',
     'src/qube_actor.h',
     'src/qube_actor.cpp',
+    'src/rounded_title_actor.h',
+    'src/rounded_title_actor.cpp',
 ]
 
 chipotherm_bin = executable('chipotherm',

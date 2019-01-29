@@ -5,6 +5,7 @@
  */
 
 #include "button_actor.h"
+#include "palette.h"
 
 BUBBLES_NAMESPACE_BEGIN
 
@@ -51,15 +52,8 @@ void ButtonActor::render(cairo_t *cr, Rect at_rect)
     double height = rect.height;
     double cornerRadius = 16.0;
     double padding = 8.0;
-    width -= padding * 2.0;
-    height -= padding * 2.0;
 
-    cairo_new_sub_path(cr);
-    cairo_arc(cr, padding + width - cornerRadius, padding + cornerRadius, cornerRadius, -M_PI_2, 0);
-    cairo_arc(cr, padding + width - cornerRadius, padding + height - cornerRadius, cornerRadius, 0, M_PI_2);
-    cairo_arc(cr, padding + cornerRadius, padding + height - cornerRadius, cornerRadius, M_PI_2, M_PI);
-    cairo_arc(cr, padding + cornerRadius, padding + cornerRadius, cornerRadius, M_PI, 1.5 * M_PI);
-    cairo_close_path(cr);
+    Palette::draw_rounded_rect(cr, width, height, cornerRadius, padding);
 
     _foreground_color.set_source(cr);
     if (_highlighted) {

@@ -15,6 +15,7 @@
 #include "graph_actor.h"
 #include "palette.h"
 #include "qube_actor.h"
+#include "rounded_title_actor.h"
 #include <bubbles/bubbles.h>
 #include <sigc++/sigc++.h>
 
@@ -63,11 +64,20 @@ int main(int argc, char **argv)
     auto grid = std::make_shared<ActorGrid>(Rect(0, 0, canvasWidth, canvasHeight), 2);
     main_grid->stack_actor(grid, 0);
 
-    auto qube3 = std::make_shared<QubeActor>(Rect());
-    grid->stack_actor(qube3, 0, -1);
-
     auto clock_actor = std::make_shared<ClockActor>(Rect());
     grid->stack_actor(clock_actor, 0, -1);
+
+    // Temperatures 
+    auto temp_stack = std::make_shared<ActorGrid>(RECT_ZERO, 1);
+    temp_stack->set_orientation(ActorGrid::Orientation::HORIZONTAL);
+    grid->stack_actor(temp_stack, 0, -1);
+
+    auto qube3 = std::make_shared<QubeActor>(Rect());
+    temp_stack->stack_actor(qube3, 0);
+
+    auto current = std::make_shared<RoundedTitleActor>(RECT_ZERO, "CURRENT");
+    current->get_label()->set_contents("69");
+    temp_stack->stack_actor(current, 0);
 
     auto graph_actor = std::make_shared<GraphActor>(Rect());
     std::srand(std::time(nullptr));
