@@ -15,6 +15,7 @@ ClockActor::ClockActor(Rect r)
     _label = std::make_shared<LabelActor>(r, "");
     _label->set_foreground_color(Palette::foreground);
     _label->set_alignment(PANGO_ALIGN_CENTER);
+    _label->set_font_prop("Input Mono 19");
     add_subactor(_label);
 }
 

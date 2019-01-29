@@ -32,15 +32,37 @@ int main(int argc, char **argv)
         windowed = true;
     }
 
-    Rect canvasRect(0, 0, canvasWidth * scale, canvasHeight * scale);
+    Rect scaledCanvasRect(0, 0, canvasWidth * scale, canvasHeight * scale);
 
-    MainScene mainScene(canvasRect, windowed);
+    MainScene mainScene(scaledCanvasRect, windowed);
     mainScene.set_scale(scale);
     if (!windowed) {
         mainScene.set_hides_cursor(true);
     }
 
+    Rect canvasRect(0, 0, canvasWidth, canvasHeight);
+    auto main_grid = std::make_shared<ActorGrid>(canvasRect, 1);
+    main_grid->set_orientation(ActorGrid::Orientation::VERTICAL);
+    mainScene.add_actor(main_grid);
+
+    auto status_grid = std::make_shared<ActorGrid>(RECT_ZERO, 1);
+    status_grid->set_orientation(ActorGrid::Orientation::HORIZONTAL);
+    main_grid->stack_actor(status_grid, 0, 30.0);
+
+    auto title_label = std::make_shared<LabelActor>(RECT_ZERO, " XION HVAC System Control Panel");
+    title_label->set_font_prop("Karla 11");
+    title_label->set_foreground_color(Palette::foreground);
+    status_grid->stack_actor(title_label, 0);
+
+    auto status_label = std::make_shared<LabelActor>(RECT_ZERO, "ONLINE");
+    status_label->set_alignment(PangoAlignment::PANGO_ALIGN_RIGHT);
+    status_label->set_font_prop("Karla 10");
+    status_label->set_foreground_color(Color(0x00, 0xFF, 0x12, 0xFF));
+    status_grid->stack_actor(status_label, 0);
+
     auto grid = std::make_shared<ActorGrid>(Rect(0, 0, canvasWidth, canvasHeight), 2);
+    main_grid->stack_actor(grid, 0);
+
     auto qube3 = std::make_shared<QubeActor>(Rect());
     grid->stack_actor(qube3, 0, -1);
 
@@ -57,13 +79,26 @@ int main(int argc, char **argv)
 
     auto button = std::make_shared<ButtonActor>(RECT_ZERO);
     button->set_label_text("HEAT ON");
-    button->set_foreground_color(Palette::foreground);
+    button->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
     button->clicked.connect(sigc::slot<void>([]() {
         printf("button clicked\n");
     }));
-    grid->stack_actor(button, 1);
+    grid->stack_actor(button, 1, 160);
 
-    mainScene.add_actor(grid);
+    auto subgrid = std::make_shared<ActorGrid>(RECT_ZERO, 1);
+    subgrid->set_orientation(ActorGrid::Orientation::HORIZONTAL);
+
+    auto minus_button = std::make_shared<ButtonActor>(RECT_ZERO);
+    minus_button->set_label_text("-");
+    minus_button->set_foreground_color(Palette::foreground);
+    subgrid->stack_actor(minus_button, 0);
+
+    auto plus_button = std::make_shared<ButtonActor>(RECT_ZERO);
+    plus_button->set_foreground_color(Palette::foreground);
+    plus_button->set_label_text("+");
+    subgrid->stack_actor(plus_button, 0);
+
+    grid->stack_actor(subgrid, 1);
 
     // Start scene's runloop
     mainScene.run();
