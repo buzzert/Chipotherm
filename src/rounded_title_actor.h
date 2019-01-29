@@ -16,6 +16,7 @@ class RoundedTitleActor : public Actor
 public:
     RoundedTitleActor(Rect r, std::string title);
 
+    void update() override;
     void render(cairo_t *cr, Rect in_rect) override;
     void layout_actors() override;
 
@@ -24,11 +25,17 @@ public:
 
     bool get_filled() const { return _filled; };
     void set_filled(bool filled);
+
+    bool pulsing = false;
     
 private:
     std::shared_ptr<LabelActor> _label;
     std::shared_ptr<LabelActor> _title_label;
 
-    bool  _filled;
-    Color _foreground_color;
+    bool   _filled;
+    Color  _foreground_color;
+
+    double _pulse_begin = 0;
+    bool   _pulse_direction = false;
+    double _pulse_progress = 0.0;
 };

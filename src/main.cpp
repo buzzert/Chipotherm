@@ -6,6 +6,8 @@
 
 #include <bubbles/bubbles.h>
 #include <memory>
+#include <cstdlib>
+#include <cstring>
 
 #include "primary_scene.h"
 

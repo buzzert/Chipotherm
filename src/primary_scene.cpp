@@ -61,6 +61,7 @@ ActorGridPtr PrimaryScene::initialize_statistics_grid()
         temp_stack->stack_actor(current, 0);
 
         auto target = std::make_shared<RoundedTitleActor>(RECT_ZERO, "TARGET");
+        target->pulsing = true;
         target->get_label()->set_contents("80");
         target->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
         target->set_filled(true);

@@ -27,6 +27,7 @@ chipotherm_sources = [
     'src/qube_actor.cpp',
     'src/rounded_title_actor.h',
     'src/rounded_title_actor.cpp',
+    'src/utilities.h',
 ]
 
 chipotherm_bin = executable('chipotherm',
