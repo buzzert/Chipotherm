@@ -1,3 +1,4 @@
 build/
+chip_build/
 CMakeLists.txt
 
