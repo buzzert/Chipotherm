@@ -10,7 +10,7 @@
 static const double k_label_offset = 10.0;
 
 RoundedTitleActor::RoundedTitleActor(Rect r, std::string title)
-    : Actor(r), _foreground_color(Color(0xFF, 0xFF, 0xFF, 0xFF))
+    : Actor(r), _foreground_color(0xFF, 0xFF, 0xFF, 0xFF)
 {
     _label = std::make_shared<LabelActor>(RECT_ZERO, "");
     _label->set_font_prop("Karla 21");
@@ -33,18 +33,35 @@ void RoundedTitleActor::layout_actors()
     _label->set_rect(Rect(0, k_label_offset, rect.width, rect.height - k_label_offset));
 }
 
+void RoundedTitleActor::set_foreground_color(Color c)
+{
+    _foreground_color = c;
+    _label->set_foreground_color(c);
+}
+
+void RoundedTitleActor::set_filled(bool filled)
+{
+    _filled = filled;
+    if (filled) {
+        _label->set_foreground_color(Color(0x00, 0x00, 0x00, 0xFF));
+    } else {
+        _label->set_foreground_color(_foreground_color);
+    }
+}
+
 void RoundedTitleActor::render(cairo_t *cr, Rect in_rect)
 {
     // Draw background
     double padding = 8.0;
-    double cornerRadius = 16.0;
-
     Rect background_rect = Rect(0.0, k_label_offset, rect.width, rect.height - k_label_offset).inset_by(padding, padding);
-    Palette::draw_rounded_rect(cr, background_rect, cornerRadius);
+    Palette::draw_rounded_rect(cr, background_rect, Palette::corner_radius);
 
     _foreground_color.set_source(cr);
-    cairo_stroke(cr);
-    //cairo_fill(cr);
+    if (_filled) {
+        cairo_fill(cr);
+    } else {
+        cairo_stroke(cr);
+    }
 
     Actor::render(cr, in_rect);
 }

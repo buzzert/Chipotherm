@@ -48,6 +48,7 @@ ActorGridPtr PrimaryScene::initialize_statistics_grid()
     {
         auto temp_stack = std::make_shared<ActorGrid>(RECT_ZERO, 1);
         temp_stack->set_orientation(ActorGrid::Orientation::HORIZONTAL);
+        temp_stack->set_padding(5.0);
         grid->stack_actor(temp_stack, 0, -1);
 
         auto qube3 = std::make_shared<QubeActor>(Rect());
@@ -55,17 +56,21 @@ ActorGridPtr PrimaryScene::initialize_statistics_grid()
 
         auto current = std::make_shared<RoundedTitleActor>(RECT_ZERO, "CURRENT");
         current->get_label()->set_contents("69");
+        current->set_foreground_color(Palette::foreground);
+        current->set_filled(true);
         temp_stack->stack_actor(current, 0);
 
         auto target = std::make_shared<RoundedTitleActor>(RECT_ZERO, "TARGET");
         target->get_label()->set_contents("80");
+        target->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
+        target->set_filled(true);
         temp_stack->stack_actor(target, 0);
     }
 
     // Graph
     auto graph_actor = std::make_shared<GraphActor>(Rect());
     std::srand(std::time(nullptr));
-    for (unsigned i = 0; i < 100; i++) {
+    for (unsigned i = 0; i < 20; i++) {
         double val = fmod(std::rand(), 100);
         graph_actor->add_sample(val);
     }

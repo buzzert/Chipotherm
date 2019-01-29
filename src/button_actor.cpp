@@ -46,12 +46,8 @@ void ButtonActor::mouse_up(int x, int y)
 void ButtonActor::render(cairo_t *cr, Rect at_rect)
 {
     // Draw background
-    double width = rect.width;
-    double height = rect.height;
-    double cornerRadius = 16.0;
     double padding = 8.0;
-
-    Palette::draw_rounded_rect(cr, get_bounds().inset_by(padding, padding), cornerRadius);
+    Palette::draw_rounded_rect(cr, get_bounds().inset_by(padding, padding), Palette::corner_radius);
 
     _foreground_color.set_source(cr);
     if (_highlighted) {
