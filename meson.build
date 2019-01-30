@@ -9,6 +9,7 @@ chipotherm_deps = [
     libbubbles_dep,
     dependency('pangocairo'),
     dependency('sigc++-2.0'),
+    dependency('threads'),
 ]
 
 chipotherm_sources = [
@@ -20,6 +21,7 @@ chipotherm_sources = [
     'src/graph_actor.cpp',
     'src/io_control.cpp',
     'src/main.cpp',
+    'src/monitor.cpp',
     'src/palette.h',
     'src/palette.cpp',
     'src/primary_scene.h',

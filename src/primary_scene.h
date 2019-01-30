@@ -9,8 +9,8 @@
 #include <bubbles/bubbles.h>
 #include <sigc++/sigc++.h>
 
-#include "io_control.h"
 #include "button_actor.h"
+#include "monitor.h"
 #include "rounded_title_actor.h"
 
 using namespace Bubbles;
@@ -32,6 +32,5 @@ private:
 
     void update_ui_state();
 
-    IOControl _controller;
-
+    Monitor _monitor;
 };

@@ -89,8 +89,8 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
         _heat_button->set_label_text("HEAT ON");
         _heat_button->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
         _heat_button->clicked.connect(sigc::slot<void>([this]() {
-            bool heat_on = _controller.get_heater_on();
-            _controller.set_heater_on(!heat_on);
+            bool enabled = _monitor.get_monitoring_enabled();
+            _monitor.set_monitoring_enabled(!enabled);
             update_ui_state();
         }));
         grid->stack_actor(_heat_button, 0, 160);
@@ -120,7 +120,7 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
 PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
     : MainScene(canvas_rect, windowed, scale)
 {
-    _controller.simulate = true;
+    _monitor.get_controller().simulate = true;
 
     Rect canvasRect(0, 0, canvas_rect.width, canvas_rect.height);
 
@@ -152,16 +152,17 @@ PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
 
 void PrimaryScene::update_ui_state()
 {
-    float current_temp = _controller.read_temperature();
+    float current_temp = _monitor.get_controller().read_temperature();
 
     std::string temp_string = "999";
     snprintf(&temp_string[0], 3, "%.0f", current_temp);
     _current_temp_indicator->get_label()->set_contents(temp_string);
 
-    bool heat_on = _controller.get_heater_on();
+    bool enabled = _monitor.get_monitoring_enabled();
+    bool heat_on = _monitor.get_controller().get_heater_on();
     _target_temp_indicator->pulsing = heat_on;
 
-    if (heat_on) {
+    if (enabled) {
         _target_temp_indicator->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
 
         _heat_button->set_label_text("HEAT OFF");
