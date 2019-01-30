@@ -13,6 +13,7 @@
 #include "palette.h"
 #include "qube_actor.h"
 #include "runloop.h"
+#include "utilities.h"
 
 ActorGridPtr PrimaryScene::initialize_status_grid()
 {
@@ -64,6 +65,7 @@ ActorGridPtr PrimaryScene::initialize_statistics_grid()
         target->pulsing = true;
         target->get_label()->set_contents("80");
         target->set_filled(true);
+        target->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
         temp_stack->stack_actor(target, 0);
         _target_temp_indicator = target;
     }
@@ -104,11 +106,21 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
         auto minus_button = std::make_shared<ButtonActor>(RECT_ZERO);
         minus_button->set_label_text("-");
         minus_button->set_foreground_color(Palette::foreground);
+        minus_button->clicked.connect(sigc::slot<void>([this]() {
+            _monitor.set_target_temperature(_monitor.get_target_temperature() - 1);
+            _target_temp_indicator->flash();
+            update_ui_state();
+        }));
         subgrid->stack_actor(minus_button, 0);
 
         auto plus_button = std::make_shared<ButtonActor>(RECT_ZERO);
         plus_button->set_foreground_color(Palette::foreground);
         plus_button->set_label_text("+");
+        plus_button->clicked.connect(sigc::slot<void>([this]() {
+            _monitor.set_target_temperature(_monitor.get_target_temperature() + 1);
+            _target_temp_indicator->flash();
+            update_ui_state();
+        }));
         subgrid->stack_actor(plus_button, 0);
 
         grid->stack_actor(subgrid, 0);
@@ -164,21 +176,23 @@ void PrimaryScene::update_ui_state()
 {
     float current_temp = _monitor.get_controller().read_temperature();
 
-    std::string temp_string = "999";
-    snprintf(&temp_string[0], 3, "%.0f", current_temp);
+    std::string temp_string = Utilities::string_val(current_temp);
     _current_temp_indicator->get_label()->set_contents(temp_string);
+
+    float target_temp = _monitor.get_target_temperature();
+    _target_temp_indicator->get_label()->set_contents(Utilities::string_val(target_temp));
 
     bool enabled = _monitor.get_monitoring_enabled();
     bool heat_on = _monitor.get_controller().get_heater_on();
     _target_temp_indicator->pulsing = heat_on;
 
     if (enabled) {
-        _target_temp_indicator->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
+        _target_temp_indicator->set_alpha(1.0);
 
         _heat_button->set_label_text("HEAT OFF");
         _heat_button->set_filled(true);
     } else {
-        _target_temp_indicator->set_foreground_color(Color(0xFF, 0x00, 0x00, 0x55));
+        _target_temp_indicator->set_alpha(0.5);
 
         _heat_button->set_label_text("HEAT ON");
         _heat_button->set_filled(false);

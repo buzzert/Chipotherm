@@ -50,24 +50,45 @@ void RoundedTitleActor::set_filled(bool filled)
     }
 }
 
+void RoundedTitleActor::flash()
+{
+    _flashing = true;
+    _flash_begin = Utilities::time_now();
+    _flash_progress = 0.0;
+}
+
 void RoundedTitleActor::update()
 {
     Actor::update();
 
-    if (!pulsing) return;
-
     double now = Utilities::time_now();
-    const double pulse_duration = 0.4;
-    double progress = (now - _pulse_begin) / pulse_duration;
-    if (!_pulse_direction) {
-        _pulse_progress = MAX(0.0, 1.0 - progress);
-    } else {
-        _pulse_progress = MIN(1.0, progress);
+
+    // Pulse animation
+    if (pulsing) {
+        const double pulse_duration = 0.4;
+        double progress = (now - _pulse_begin) / pulse_duration;
+        if (!_pulse_direction) {
+            _pulse_progress = MAX(0.0, 1.0 - progress);
+        } else {
+            _pulse_progress = MIN(1.0, progress);
+        }
+        
+        if (progress > 1.0) {
+            _pulse_direction = !_pulse_direction;
+            _pulse_begin = now;
+        }
     }
-    
-    if (progress > 1.0) {
-        _pulse_direction = !_pulse_direction;
-        _pulse_begin = now;
+
+    // Flash animation
+    if (_flashing) {
+        const double flash_delay = 1.0;
+        const double flash_fade_duration = 1.0;
+        if ( (now - _flash_begin) > flash_delay ) {
+            _flash_progress = (now - (_flash_begin + flash_delay)) / flash_fade_duration;
+            if (_flash_progress > 1.0) {
+                _flashing = false;
+            }
+        }
     }
 }
 
@@ -78,7 +99,15 @@ void RoundedTitleActor::render(cairo_t *cr, Rect in_rect)
     Rect background_rect = Rect(0.0, k_label_offset, rect.width, rect.height - k_label_offset).inset_by(padding, padding);
     Palette::draw_rounded_rect(cr, background_rect, Palette::corner_radius);
 
-    _foreground_color.set_source(cr);
+    double effective_alpha = _alpha;
+    if (_flashing) {
+        effective_alpha = MAX(_alpha, 1.0 - _flash_progress);
+    }
+
+    Color tinted_fg = _foreground_color;
+    tinted_fg.alpha = effective_alpha * 255;
+
+    tinted_fg.set_source(cr);
     if (pulsing) {
         Color fg = _foreground_color;
         fg.alpha = _pulse_progress * 255;
@@ -95,6 +124,12 @@ void RoundedTitleActor::render(cairo_t *cr, Rect in_rect)
     if (_filled) {
         cairo_fill(cr);
     } else {
+        cairo_stroke(cr);
+    }
+
+    if (_flashing) {
+        cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0 - _flash_progress);
+        Palette::draw_rounded_rect(cr, background_rect, Palette::corner_radius);
         cairo_stroke(cr);
     }
 

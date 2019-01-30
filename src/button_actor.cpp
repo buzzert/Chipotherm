@@ -38,8 +38,8 @@ void ButtonActor::mouse_down(int x, int y)
 void ButtonActor::mouse_up(int x, int y)
 {
     set_highlighted(false);
-    if (rect.point_inside(x, y)) {
-       clicked();
+    if (get_bounds().point_inside(x, y)) {
+        clicked();
     }
 }
 

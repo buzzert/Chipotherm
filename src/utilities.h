@@ -6,18 +6,17 @@
 
 #pragma once
 
+#include <string>
+
 extern "C" {
 #include <stdlib.h>
 }
 
 namespace Utilities {
-    double time_now()
-    {
-        struct timespec ts;
-        clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+    // Returns the current time (in seconds) from the monotonic clock 
+    double time_now();
 
-        long ms = (ts.tv_sec * 1000) + (ts.tv_nsec / 1000000);                                                           
-        return (ms / 1000.0);
-    }
+    // Returns string representation of `val`
+    template<typename T> std::string string_val(T val);
 }
 

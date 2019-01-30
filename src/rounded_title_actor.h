@@ -28,6 +28,9 @@ public:
     bool get_filled() const { return _filled; };
     void set_filled(bool filled);
 
+    // Flash animation to indicate changing state
+    void flash();
+
     bool pulsing = false;
     
 private:
@@ -40,4 +43,8 @@ private:
     double _pulse_begin = 0;
     bool   _pulse_direction = false;
     double _pulse_progress = 0.0;
+
+    bool   _flashing = true;
+    double _flash_progress = 0.0;
+    double _flash_begin = 0;
 };

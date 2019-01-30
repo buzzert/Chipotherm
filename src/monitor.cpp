@@ -7,6 +7,7 @@
 #include "monitor.h"
 
 #include <iostream>
+#include <algorithm>
 #include <chrono>
 
 #include "runloop.h"
@@ -49,7 +50,7 @@ void Monitor::set_monitoring_enabled(bool enabled)
 
 void Monitor::set_target_temperature(float target)
 {
-    _target_temperature = target;
+    _target_temperature = std::min(100.f, std::max(0.f, target));
 }
 
 void Monitor::transition_to_state(State newstate)
