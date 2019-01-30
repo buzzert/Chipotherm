@@ -18,9 +18,9 @@ int main(int argc, char **argv)
     // CHIP resolution is 480x272
     const int canvasWidth = 480;
     const int canvasHeight = 272;
-    const float scale = 2.0; // for testing on hiDPI
+    const float scale = 1.0; // for testing on hiDPI
 
-    bool windowed = true;
+    bool windowed = false;
     if (argc > 1 && strcmp("-w", argv[1]) == 0) {
         windowed = true;
     }

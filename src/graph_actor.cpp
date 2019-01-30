@@ -9,6 +9,8 @@
 
 #include <limits>
 
+static const double sample_width = 16.0;
+
 GraphActor::GraphActor(Rect r)
     : Actor(r)
 {
@@ -30,6 +32,15 @@ void GraphActor::add_sample(double value)
 {
     Sample s = { .value = value };
     _samples.push_back(s);
+
+    while (_samples.size() > max_samples(rect.width)) {
+        _samples.pop_front();
+    }
+}
+
+unsigned GraphActor::max_samples(double for_width)
+{
+    return (for_width / sample_width) + 1;
 }
 
 void GraphActor::render(cairo_t *cr, Rect at_rect)
@@ -42,7 +53,6 @@ void GraphActor::render(cairo_t *cr, Rect at_rect)
 
     const double height = rect.height;
     const double width = rect.width;
-    const double sample_width = 16.0;
 
     // Compute normalized height
     double mean_val = 0.0;

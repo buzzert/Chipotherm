@@ -6,5 +6,5 @@ if [ "$#" -ne 1 ]; then
     exit 1
 fi
 
-scp chipotherm "root@$1:~/chipotherm" && ssh root@$1 "DISPLAY=:0 ~/chipotherm"
+scp chipotherm "root@$1:~/chipotherm" && ssh -t root@$1 "DISPLAY=:0 ~/chipotherm"
 

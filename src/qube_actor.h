@@ -27,7 +27,10 @@ public:
     Color get_color() const { return _color; }
     void  set_color(Color c) { _color = c; }
 
+    void set_rotation_speed(float speed) { _rotation_speed = speed; };
+
 private:
+    float  _rotation_speed = 1.0;
     double _time_offset;
     Color  _color;
 

@@ -29,6 +29,8 @@ public:
 
     Monitor();
 
+    void set_simulation_mode(bool simulate);
+
     void set_monitoring_enabled(bool enabled);
     bool get_monitoring_enabled() const { return _enabled; };
 
@@ -38,9 +40,11 @@ public:
     State get_current_state() const { return _state; };
     IOControl& get_controller() { return _controller; };
 
+    bool controls_screen = false;
     sigc::signal<void, State> state_changed;
 
 private:
+    bool      _simulation_mode = false;
     bool      _enabled = false;
     float     _target_temperature = 73.0;
 
@@ -51,6 +55,11 @@ private:
     std::mutex  _monitor_mutex;
     std::condition_variable _monitor_condition;
 
+    using Clock = std::chrono::system_clock;
+    std::chrono::time_point<Clock> _last_engagement_time;
+
     void monitor_main();
     void transition_to_state(State newstate);
+    void update_simulation_state();
+    void set_heater_engaged_if_time_allows(bool engaged);
 };

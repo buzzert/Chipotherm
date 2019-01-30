@@ -25,7 +25,7 @@ ActorGridPtr PrimaryScene::initialize_status_grid()
     title_label->set_foreground_color(Palette::foreground);
     status_grid->stack_actor(title_label, 0);
 
-    auto status_label = std::make_shared<LabelActor>(RECT_ZERO, "ONLINE");
+    auto status_label = std::make_shared<LabelActor>(RECT_ZERO, "ONLINE ");
     status_label->set_alignment(PangoAlignment::PANGO_ALIGN_RIGHT);
     status_label->set_font_prop("Karla 10");
     status_label->set_foreground_color(Color(0x00, 0xFF, 0x12, 0xFF));
@@ -51,11 +51,11 @@ ActorGridPtr PrimaryScene::initialize_statistics_grid()
         temp_stack->set_padding(5.0);
         grid->stack_actor(temp_stack, 0, -1);
 
-        auto qube3 = std::make_shared<QubeActor>(Rect());
-        temp_stack->stack_actor(qube3, 0);
+        _qube = std::make_shared<QubeActor>(Rect());
+        temp_stack->stack_actor(_qube, 0);
 
         RoundedTitleActorPtr current = std::make_shared<RoundedTitleActor>(RECT_ZERO, "CURRENT");
-        current->get_label()->set_contents("69");
+        current->get_label()->set_contents("00");
         current->set_foreground_color(Palette::foreground);
         current->set_filled(true);
         temp_stack->stack_actor(current, 0);
@@ -63,7 +63,7 @@ ActorGridPtr PrimaryScene::initialize_statistics_grid()
 
         RoundedTitleActorPtr target = std::make_shared<RoundedTitleActor>(RECT_ZERO, "TARGET");
         target->pulsing = true;
-        target->get_label()->set_contents("80");
+        target->get_label()->set_contents("00");
         target->set_filled(true);
         target->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
         temp_stack->stack_actor(target, 0);
@@ -71,13 +71,8 @@ ActorGridPtr PrimaryScene::initialize_statistics_grid()
     }
 
     // Graph
-    auto graph_actor = std::make_shared<GraphActor>(Rect());
-    std::srand(std::time(nullptr));
-    for (unsigned i = 0; i < 20; i++) {
-        double val = fmod(std::rand(), 100);
-        graph_actor->add_sample(val);
-    }
-    grid->stack_actor(graph_actor, 0);
+    _graph = std::make_shared<GraphActor>(Rect());
+    grid->stack_actor(_graph, 0);
 
     return grid;
 }
@@ -89,7 +84,6 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
     // Heat ON button 
     {
         _heat_button = std::make_shared<ButtonActor>(RECT_ZERO);
-        _heat_button->set_label_text("HEAT ON");
         _heat_button->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
         _heat_button->clicked.connect(sigc::slot<void>([this]() {
             bool enabled = _monitor.get_monitoring_enabled();
@@ -132,7 +126,8 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
 PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
     : MainScene(canvas_rect, windowed, scale)
 {
-    _monitor.get_controller().simulate = true;
+    _monitor.set_simulation_mode(true);
+    _monitor.controls_screen = !windowed;
     _monitor.state_changed.connect(sigc::slot<void, Monitor::State>([this](Monitor::State newstate) {
         update_ui_state();
     }));
@@ -170,11 +165,23 @@ void PrimaryScene::update()
     MainScene::update();
 
     Runloop::main_runloop().iterate();
+
+    using namespace std::chrono_literals;
+    if (Clock::now() - _last_sample_time > 1s) {
+        update_ui_state();
+    }
+
+    if (Clock::now() - _last_graph_update_time > 5s) {
+        float current_temp = _monitor.get_controller().read_temperature();
+        _graph->add_sample(current_temp);
+        _last_graph_update_time = Clock::now();
+    }
 }
 
 void PrimaryScene::update_ui_state()
 {
     float current_temp = _monitor.get_controller().read_temperature();
+    _last_sample_time = Clock::now();
 
     std::string temp_string = Utilities::string_val(current_temp);
     _current_temp_indicator->get_label()->set_contents(temp_string);
@@ -185,16 +192,26 @@ void PrimaryScene::update_ui_state()
     bool enabled = _monitor.get_monitoring_enabled();
     bool heat_on = _monitor.get_controller().get_heater_on();
     _target_temp_indicator->pulsing = heat_on;
+    
+    if (heat_on) {
+        _qube->set_rotation_speed(5.0);
+    } else {
+        _qube->set_rotation_speed(1.0);
+    }
 
     if (enabled) {
+        _qube->set_color(Color(0xFF, 0x00, 0x00, 0xFF));
+
         _target_temp_indicator->set_alpha(1.0);
 
-        _heat_button->set_label_text("HEAT OFF");
+        _heat_button->set_label_text("DISABLE");
         _heat_button->set_filled(true);
     } else {
+        _qube->set_color(Palette::foreground);
+
         _target_temp_indicator->set_alpha(0.5);
 
-        _heat_button->set_label_text("HEAT ON");
+        _heat_button->set_label_text("ENABLE");
         _heat_button->set_filled(false);
     }
 }

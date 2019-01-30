@@ -7,11 +7,14 @@
 #pragma once
 
 #include <bubbles/bubbles.h>
+#include <chrono>
 #include <sigc++/sigc++.h>
 
 #include "button_actor.h"
+#include "graph_actor.h"
 #include "monitor.h"
 #include "rounded_title_actor.h"
+#include "qube_actor.h"
 
 using namespace Bubbles;
 
@@ -30,9 +33,15 @@ private:
     RoundedTitleActorPtr _current_temp_indicator;
     RoundedTitleActorPtr _target_temp_indicator;
 
+    GraphActorPtr _graph;
+    QubeActorPtr  _qube;
+
     ButtonActorPtr _heat_button;
 
     void update_ui_state();
 
+    using Clock = std::chrono::system_clock;
+    std::chrono::time_point<Clock> _last_sample_time;
+    std::chrono::time_point<Clock> _last_graph_update_time;
     Monitor _monitor;
 };

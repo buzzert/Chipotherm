@@ -7,6 +7,7 @@
 #pragma once
 
 #include <bubbles/bubbles.h>
+#include <deque>
 
 using namespace Bubbles;
 
@@ -29,7 +30,9 @@ private:
     };
 
     std::shared_ptr<LabelActor> _label;
-    std::vector<Sample> _samples;
+    std::deque<Sample>          _samples;
+
+    unsigned max_samples(double for_width);
 };
 
 
