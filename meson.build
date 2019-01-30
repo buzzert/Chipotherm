@@ -13,25 +13,17 @@ chipotherm_deps = [
 ]
 
 chipotherm_sources = [
-    'src/button_actor.h',
     'src/button_actor.cpp',
-    'src/clock_actor.h',
     'src/clock_actor.cpp',
-    'src/graph_actor.h',
     'src/graph_actor.cpp',
     'src/io_control.cpp',
     'src/main.cpp',
     'src/monitor.cpp',
-    'src/palette.h',
     'src/palette.cpp',
-    'src/primary_scene.h',
     'src/primary_scene.cpp',
-    'src/qube_actor.h',
     'src/qube_actor.cpp',
-    'src/rounded_title_actor.h',
     'src/rounded_title_actor.cpp',
     'src/runloop.cpp',
-    'src/utilities.h',
 ]
 
 chipotherm_bin = executable('chipotherm',
