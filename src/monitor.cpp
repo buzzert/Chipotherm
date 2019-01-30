@@ -5,8 +5,11 @@
  */
 
 #include "monitor.h"
+
 #include <iostream>
 #include <chrono>
+
+#include "runloop.h"
 
 Monitor::Monitor()
 {}
@@ -17,7 +20,7 @@ void Monitor::monitor_main()
 
     bool running = true;
     while (running) {
-        std::cout << "Monitoring..." << std::endl;
+        // TODO: Monitor
 
         std::unique_lock<std::mutex> lk(_monitor_mutex);
         _monitor_condition.wait_for(lk, 4s);
@@ -52,6 +55,7 @@ void Monitor::set_target_temperature(float target)
 void Monitor::transition_to_state(State newstate)
 {
     _state = newstate;
-
-    // TODO: how to notify an observer?
+    Runloop::main_runloop().schedule_task([=]() {
+        state_changed(newstate);
+    });
 }

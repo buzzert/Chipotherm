@@ -12,6 +12,7 @@
 #include "graph_actor.h"
 #include "palette.h"
 #include "qube_actor.h"
+#include "runloop.h"
 
 ActorGridPtr PrimaryScene::initialize_status_grid()
 {
@@ -91,7 +92,6 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
         _heat_button->clicked.connect(sigc::slot<void>([this]() {
             bool enabled = _monitor.get_monitoring_enabled();
             _monitor.set_monitoring_enabled(!enabled);
-            update_ui_state();
         }));
         grid->stack_actor(_heat_button, 0, 160);
     }
@@ -121,6 +121,9 @@ PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
     : MainScene(canvas_rect, windowed, scale)
 {
     _monitor.get_controller().simulate = true;
+    _monitor.state_changed.connect(sigc::slot<void, Monitor::State>([this](Monitor::State newstate) {
+        update_ui_state();
+    }));
 
     Rect canvasRect(0, 0, canvas_rect.width, canvas_rect.height);
 
@@ -148,6 +151,13 @@ PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
     }
 
     update_ui_state();
+}
+
+void PrimaryScene::update()
+{
+    MainScene::update();
+
+    Runloop::main_runloop().iterate();
 }
 
 void PrimaryScene::update_ui_state()

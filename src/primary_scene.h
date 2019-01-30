@@ -20,6 +20,8 @@ class PrimaryScene : public MainScene
 public:
     PrimaryScene(Rect canvasRect, bool windowed, double scale = 1.0);
 
+    void update() override;
+
 private:
     ActorGridPtr initialize_status_grid();
     ActorGridPtr initialize_statistics_grid();

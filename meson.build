@@ -30,6 +30,7 @@ chipotherm_sources = [
     'src/qube_actor.cpp',
     'src/rounded_title_actor.h',
     'src/rounded_title_actor.cpp',
+    'src/runloop.cpp',
     'src/utilities.h',
 ]
 

@@ -11,6 +11,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <thread>
+#include <sigc++/sigc++.h>
 
 class Monitor
 {
@@ -36,6 +37,8 @@ public:
 
     State get_current_state() const { return _state; };
     IOControl& get_controller() { return _controller; };
+
+    sigc::signal<void, State> state_changed;
 
 private:
     bool      _enabled = false;

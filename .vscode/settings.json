@@ -1,3 +1,4 @@
 {
-    "cmake.cmakePath": "mcw"
+    "cmake.cmakePath": "mcw",
+    "C_Cpp.configurationWarnings": "Disabled"
 }
