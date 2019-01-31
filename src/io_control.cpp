@@ -21,12 +21,16 @@ float IOControl::read_temperature()
         tempered_read_sensors(_monitor_device.get());
 
         float resultC = 0.0;
+        float resultF = 0.0;
         bool result = tempered_get_temperature(_monitor_device.get(), 0, &resultC);
         if (!result) {
             fprintf(stderr, "Error reading temperature from device\n");
+            resultF = -1.0; // report -1 so it's really obvious something is wrong in the UI
+        } else {
+            resultF = (resultC * (9.0 / 5.0) + 32.0);
         }
         
-        return (resultC * (9.0 / 5.0) + 32.0);
+        return resultF;
     }
 }
 
@@ -108,6 +112,7 @@ void IOControl::initialize_devices_if_necessary()
             } 
 
             _relay_switch_path = base_path_string.str() + "/value";
+            set_heater_on(false); // set to OFF as initial state
         } while (0);
     }
 }
