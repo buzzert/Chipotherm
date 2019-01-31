@@ -1,4 +1,5 @@
 {
     "cmake.cmakePath": "mcw",
-    "C_Cpp.configurationWarnings": "Disabled"
+    "C_Cpp.configurationWarnings": "Disabled",
+    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
 }

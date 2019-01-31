@@ -5,11 +5,15 @@ project('chipotherm', 'cpp',
 libbubbles_proj = subproject('bubbles')
 libbubbles_dep  = libbubbles_proj.get_variable('bubbles_dep')
 
+compiler = meson.get_compiler('cpp')
+
 chipotherm_deps = [
     libbubbles_dep,
     dependency('pangocairo'),
     dependency('sigc++-2.0'),
     dependency('threads'),
+    dependency('hidapi-hidraw'),
+    compiler.find_library('tempered'),
 ]
 
 chipotherm_sources = [

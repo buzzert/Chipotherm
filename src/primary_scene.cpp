@@ -126,7 +126,8 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
 PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
     : MainScene(canvas_rect, windowed, scale)
 {
-    _monitor.set_simulation_mode(true);
+    // Naievely assume if we're running in windowed mode, we want to simulate
+    _monitor.set_simulation_mode(windowed);
     _monitor.controls_screen = !windowed;
     _monitor.state_changed.connect(sigc::slot<void, Monitor::State>([this](Monitor::State newstate) {
         update_ui_state();

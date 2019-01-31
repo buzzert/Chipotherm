@@ -6,15 +6,18 @@
 
 #pragma once
 
+#include <memory>
 #include <stdbool.h>
+#include <tempered.h>
 
 class IOControl 
 {
 public:
+    // Returns the current temperature in degrees fahrenheit
     float read_temperature();
 
     void set_heater_on(bool on);
-    bool get_heater_on() const;
+    bool get_heater_on();
 
     // Simulation
     bool simulate = false;
@@ -22,4 +25,8 @@ public:
 
 private:
     bool _sim_heat_on = false;
+
+    std::string                      _relay_switch_path;
+    std::shared_ptr<tempered_device> _monitor_device;
+    void initialize_devices_if_necessary();
 };
