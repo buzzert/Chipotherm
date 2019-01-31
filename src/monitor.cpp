@@ -14,7 +14,7 @@
 #include "runloop.h"
 
 // How often to allow the heater to toggle between engaged/disengaged
-static const std::chrono::minutes k_toggle_hysteresis(3);
+static const std::chrono::seconds k_toggle_hysteresis(30);
 
 Monitor::Monitor()
 {}
@@ -69,6 +69,9 @@ void Monitor::set_monitoring_enabled(bool enabled)
                 printf("WARN: Could not disable screen blanking (retcode: %d)\n", res);
             }
         }
+
+        // Reset throttle
+        _last_engagement_time = Clock::now() - std::chrono::hours(1);
 
         transition_to_state(State::IDLE);    
         _monitor_thread = std::thread(&Monitor::monitor_main, this);
