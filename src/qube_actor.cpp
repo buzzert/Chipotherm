@@ -16,6 +16,7 @@ QubeActor::QubeActor(Rect rect)
 void QubeActor::update()
 {
     _time_offset += (0.01 * _rotation_speed);
+    set_needs_display();
 }
 
 void QubeActor::render(cairo_t *cr, Rect at_rect)

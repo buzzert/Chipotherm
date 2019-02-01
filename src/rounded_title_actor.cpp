@@ -13,14 +13,20 @@ static const double k_label_offset = 10.0;
 RoundedTitleActor::RoundedTitleActor(Rect r, std::string title)
     : Actor(r), _foreground_color(0xFF, 0xFF, 0xFF, 0xFF)
 {
+    // Transparent background -- we draw the rounded rect ourselves
+    // TODO: bug parity with button -- unify these
+    set_background_color(Colors::transparent);
+
     _label = std::make_shared<LabelActor>(RECT_ZERO, "");
     _label->set_font_prop("Karla 21");
     _label->set_alignment(PangoAlignment::PANGO_ALIGN_CENTER);
+    _label->set_background_color(Colors::transparent);
     add_subactor(_label);
     
     _title_label = std::make_shared<LabelActor>(RECT_ZERO, title);
     _title_label->set_font_prop(Palette::sector_label_font);
     _title_label->set_foreground_color(Palette::foreground);
+    _title_label->set_background_color(Colors::transparent);
     add_subactor(_title_label);
 
     Size padding = Palette::sector_label_padding;
@@ -90,11 +96,17 @@ void RoundedTitleActor::update()
             }
         }
     }
+
+    if (_flashing || pulsing) {
+        set_needs_display();
+    }
 }
 
 void RoundedTitleActor::render(cairo_t *cr, Rect in_rect)
 {
     // Draw background
+    clear(cr, Colors::black);
+
     double padding = 8.0;
     Rect background_rect = Rect(0.0, k_label_offset, rect.width, rect.height - k_label_offset).inset_by(padding, padding);
     Palette::draw_rounded_rect(cr, background_rect, Palette::corner_radius);

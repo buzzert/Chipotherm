@@ -36,6 +36,8 @@ void GraphActor::add_sample(double value)
     while (_samples.size() > max_samples(rect.width)) {
         _samples.pop_front();
     }
+
+    set_needs_display();
 }
 
 unsigned GraphActor::max_samples(double for_width)

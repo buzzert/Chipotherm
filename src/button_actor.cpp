@@ -12,8 +12,27 @@ ButtonActor::ButtonActor(Rect r)
       _label(std::make_shared<LabelActor>(RECT_ZERO, "")),
       _foreground_color(Color(0xFF, 0xFF, 0xFF, 0xFF))
 {
+    set_background_color(Colors::transparent);
+
     _label->set_alignment(PangoAlignment::PANGO_ALIGN_CENTER);
+    _label->set_background_color(Colors::transparent);
     add_subactor(_label);
+}
+
+void ButtonActor::set_highlighted(bool highlighted)
+{
+    if (_highlighted != highlighted) {
+        _highlighted = highlighted;
+        set_needs_display();
+    }
+}
+
+void ButtonActor::set_filled(bool filled)
+{
+    if (_filled != filled) {
+        _filled = filled;
+        set_needs_display();
+    }
 }
 
 void ButtonActor::set_label_text(const std::string &str)
@@ -45,6 +64,9 @@ void ButtonActor::mouse_up(int x, int y)
 
 void ButtonActor::render(cairo_t *cr, Rect at_rect)
 {
+    // Clear with background color
+    clear(cr, Colors::black);
+
     // Draw background
     double padding = 8.0;
     Palette::draw_rounded_rect(cr, get_bounds().inset_by(padding, padding), Palette::corner_radius);
