@@ -9,6 +9,7 @@ compiler = meson.get_compiler('cpp')
 
 chipotherm_deps = [
     libbubbles_dep,
+    dependency('boost'),
     dependency('pangocairo'),
     dependency('sigc++-2.0'),
     dependency('threads'),
@@ -26,6 +27,7 @@ chipotherm_sources = [
     'src/palette.cpp',
     'src/primary_scene.cpp',
     'src/qube_actor.cpp',
+    'src/remote.cpp',
     'src/rounded_title_actor.cpp',
     'src/runloop.cpp',
     'src/utilities.cpp',

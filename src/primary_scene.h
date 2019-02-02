@@ -13,6 +13,7 @@
 #include "button_actor.h"
 #include "graph_actor.h"
 #include "monitor.h"
+#include "remote.h"
 #include "rounded_title_actor.h"
 #include "qube_actor.h"
 
@@ -37,6 +38,8 @@ private:
     QubeActorPtr  _qube;
 
     ButtonActorPtr _heat_button;
+
+    Remote _remote;
 
     void update_ui_state();
 

@@ -56,9 +56,12 @@ void Monitor::update_simulation_state()
 
 void Monitor::set_monitoring_enabled(bool enabled)
 {
-    {
+    if (enabled != _enabled) {
         std::lock_guard<std::mutex> lk(_monitor_mutex);
         _enabled = enabled;
+    } else {
+        // NOTE: early return
+        return;
     }
     
     if (enabled) {

@@ -158,6 +158,17 @@ PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
         panel_grid->stack_actor(controls_grid, 0);
     }
 
+    // Connect signals for remote control
+    _remote.set_enabled.connect(sigc::slot<void, bool>([this](bool enabled) {
+        _monitor.set_monitoring_enabled(enabled);
+    }));
+
+    _remote.set_temperature.connect(sigc::slot<void, float>([this](float temp) {
+        _monitor.set_target_temperature(temp);
+    }));
+
+    _remote.start_listening();
+
     update_ui_state();
 }
 
