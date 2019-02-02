@@ -7,6 +7,7 @@
 #pragma once
 
 #include <sigc++/sigc++.h>
+#include <sys/socket.h>
 #include <string>
 #include <thread>
 #include <unordered_map>
@@ -27,18 +28,18 @@ public:
 private:
     bool        _listening = false;
     std::thread _listener_thread;
-    std::string _fifo_path;
+    int         _socket_fd = -1;
 
     void main_loop();
     void process_command(const std::string whole_command);
 
     // Commands
-    using CommandFn = void; // decorator for readability
-    using arguments_t = std::vector<std::string>;
-    std::unordered_map<std::string, std::function<CommandFn(const arguments_t)>> _command_map;
+    using CommandFn   = void; // decorator for readability
+    using CommandArgs = std::vector<std::string>;
+    std::unordered_map<std::string, std::function<CommandFn(const CommandArgs)>> _command_map;
 
-    CommandFn cmd_set_enabled(const arguments_t args);
-    CommandFn cmd_set_temperature(const arguments_t args);
+    CommandFn cmd_set_enabled(const CommandArgs args);
+    CommandFn cmd_set_temperature(const CommandArgs args);
 
 };
 
