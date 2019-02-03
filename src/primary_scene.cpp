@@ -167,10 +167,18 @@ PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
         _monitor.set_target_temperature(temp);
     }));
 
-    _remote.refresh_state.connect(sigc::slot<Remote::StatePair()>([this]() -> Remote::StatePair {
+    _remote.refresh_state.connect(sigc::slot<Remote::State()>([this]() -> Remote::State {
         bool enabled = _monitor.get_monitoring_enabled();
-        float temperature = _monitor.get_target_temperature();
-        return Remote::StatePair(enabled, temperature);
+        float target = _monitor.get_target_temperature();
+        float current = _monitor.get_controller().read_temperature();
+        bool heat_on = _monitor.get_controller().get_heater_on();
+
+        return Remote::State {
+            .enabled = enabled,
+            .heat_on = heat_on,
+            .current_temp = current,
+            .target_temp = target,
+        };
     }));
 
     _remote.start_listening();

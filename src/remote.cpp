@@ -9,6 +9,8 @@
 
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 #include <fstream>
 #include <iostream>
 #include <string.h> // for strerror
@@ -134,6 +136,11 @@ void Remote::start_listening()
     _listening = true;
     _socket_listener_thread = std::thread(&Remote::socket_listener_main, this);
     _http_polling_thread = std::thread(&Remote::http_polling_main, this);
+
+    // TODO: would be nice if this sent an updated state right away, but the current
+    // state hasn't been populated yet, so this needs to happen later. Maybe introduce
+    // a Runloop::schedule_after_delay or something
+    //send_update_state();
 }
 
 void Remote::process_command(const std::string command)
@@ -246,20 +253,36 @@ void Remote::http_polling_main()
             }
         }
 
+        g_object_unref(msg);
     }
 }
 
 void Remote::send_update_state()
 {
-    std::string state_str = "";
-    Remote::StatePair state = refresh_state();
-    state_str += (state.first ? "enabled" : "disabled");
-    state_str += " " + std::to_string(state.second);
+    using boost::property_tree::ptree;
+    using boost::property_tree::write_json;
+
+    // TODO: this should probably happen on the main thread?
+    Remote::State state = refresh_state();
+
+    ptree state_tree;
+    state_tree.put("CurrentTemperature", state.current_temp);
+    state_tree.put("TargetTemperature", state.target_temp);
+    state_tree.put("Enabled", state.enabled);
+    state_tree.put("HeatOn", state.heat_on);
+
+    std::ostringstream buf;
+    write_json(buf, state_tree, true);
 
     SoupMessage *msg = soup_message_new("POST", (k_server_url + "/updateState").c_str());
+    soup_message_set_request(
+        msg, 
+        "application/text",
+        SOUP_MEMORY_COPY, 
+        buf.str().c_str(), 
+        buf.str().length()
+    );
 
-    soup_message_set_request(msg, "application/text",
-                             SOUP_MEMORY_COPY, state_str.c_str(), state_str.length());
     guint status = soup_session_send_message(_http_session.get(), msg);
     g_object_unref(msg);
 }

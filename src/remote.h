@@ -27,8 +27,13 @@ public:
     sigc::signal<void(bool)>  set_enabled;
     sigc::signal<void(float)> set_temperature;
     
-    using StatePair = std::pair<bool, float>;
-    sigc::signal<StatePair(void)> refresh_state;
+    struct State {
+        bool  enabled;
+        bool  heat_on;
+        float current_temp;
+        float target_temp;
+    };
+    sigc::signal<State(void)> refresh_state;
 
 private:
     bool        _listening = false;
