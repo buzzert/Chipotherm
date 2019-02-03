@@ -23,7 +23,7 @@ public:
     void layout_actors() override;
 
     void set_foreground_color(Color c);
-    std::shared_ptr<LabelActor> get_label() const { return _label; };
+    void set_label_contents(const std::string contents);
 
     bool get_filled() const { return _filled; };
     void set_filled(bool filled);

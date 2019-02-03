@@ -56,6 +56,14 @@ void RoundedTitleActor::set_filled(bool filled)
     }
 }
 
+void RoundedTitleActor::set_label_contents(const std::string contents)
+{
+    if (contents != _label->get_contents()) {
+        _label->set_contents(contents);
+        set_needs_display();
+    }
+}
+
 void RoundedTitleActor::flash()
 {
     _flashing = true;
