@@ -16,6 +16,9 @@
 #include <sys/un.h>
 #include <unistd.h>
 
+// TODO: Don't hardcode this?
+static const std::string k_server_url = "http://localhost:43001";
+
 #define CMD_BIND(command_fn) \
     std::bind(&command_fn, this, std::placeholders::_1)
 
@@ -75,17 +78,23 @@ Remote::Remote()
     _command_map = {
         { "set_enabled", CMD_BIND(Remote::cmd_set_enabled) },
         { "set_temperature", CMD_BIND(Remote::cmd_set_temperature) },
+        { "handle_server_cmd", CMD_BIND(Remote::cmd_handle_server_cmd) },
     };
+
+    // Setup soup session
+    SoupSession *session = soup_session_new();
+    _http_session = std::shared_ptr<SoupSession>(session, g_object_unref);
 }
 
 Remote::~Remote()
 {
     close(_socket_fd);
     _listening = false;
-    _listener_thread.join();
+    _http_polling_thread.join();
+    _socket_listener_thread.join();
 }
 
-void Remote::main_loop()
+void Remote::socket_listener_main()
 {
     std::cout << "listening to commands..." << std::endl;
 
@@ -123,7 +132,8 @@ void Remote::main_loop()
 void Remote::start_listening()
 {
     _listening = true;
-    _listener_thread = std::thread(&Remote::main_loop, this);
+    _socket_listener_thread = std::thread(&Remote::socket_listener_main, this);
+    _http_polling_thread = std::thread(&Remote::http_polling_main, this);
 }
 
 void Remote::process_command(const std::string command)
@@ -164,5 +174,93 @@ Remote::CommandFn Remote::cmd_set_temperature(const CommandArgs args)
     Runloop::main_runloop().schedule_task([=]() {
         set_temperature(temperature);
     });
+}
+
+Remote::CommandFn Remote::cmd_handle_server_cmd(const CommandArgs args)
+{
+    // Handle "refresh" command
+    if (args[0] == "refresh") {
+        send_update_state();
+        return;
+    }
+
+    // Otherwise, assume this is a setState command
+    if (args.size() != 2) {
+        fprintf(stderr, "Got server command that wasn't in the correct format\n");
+        return;
+    }
+
+    bool enabled = args[0] == "enabled";
+    float temperature = std::stof(args[1]);
+    Runloop::main_runloop().schedule_task([=]() {
+        set_temperature(temperature);
+        set_enabled(enabled);
+    });
+}
+
+/*
+ * Server communication
+ */
+
+void Remote::http_polling_main()
+{
+    while (_listening) {
+        SoupMessage *msg = soup_message_new("GET", (k_server_url + "/poll").c_str());
+        guint status = soup_session_send_message(_http_session.get(), msg);
+        if (status == 200) {
+            // Parse response body
+            GBytes *response_bytes = soup_buffer_get_as_bytes(
+                soup_message_body_flatten(msg->response_body)
+            );
+
+            if (response_bytes == nullptr) {
+                fprintf(stderr, "Error getting response buffer\n");
+                continue;
+            }
+
+            gsize size = 0;
+            gconstpointer data = g_bytes_get_data(response_bytes, &size);
+
+            if (data == nullptr) {
+                fprintf(stderr, "Error getting response buffer as bytes\n");
+                continue;
+            }
+
+            std::string response_str((const char *)data, size);
+            process_command("handle_server_cmd " + response_str);
+        } else {
+            fprintf(stderr, "Got status %d from the polling thread\n", status);
+            switch (status) {
+                case SOUP_STATUS_CANT_CONNECT:
+                    fprintf(stderr, "Unable to connect to command & control server\n");
+                    fprintf(stderr, "Trying again in 15 seconds\n");
+
+                    // Wait a little while, then try again
+                    std::this_thread::sleep_for(std::chrono::seconds(15));
+                    continue;
+                case SOUP_STATUS_IO_ERROR:
+                    // Probably just timed out, go and try again
+                    continue;
+                default:
+                    continue;
+            }
+        }
+
+    }
+}
+
+void Remote::send_update_state()
+{
+    std::string state_str = "";
+    Remote::StatePair state = refresh_state();
+    state_str += (state.first ? "enabled" : "disabled");
+    state_str += " " + std::to_string(state.second);
+
+    SoupMessage *msg = soup_message_new("POST", (k_server_url + "/updateState").c_str());
+
+    soup_message_set_request(msg, "application/text",
+                             SOUP_MEMORY_COPY, state_str.c_str(), state_str.length());
+    guint status = soup_session_send_message(_http_session.get(), msg);
+    g_object_unref(msg);
 }
 

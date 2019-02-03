@@ -55,7 +55,7 @@ ActorGridPtr PrimaryScene::initialize_statistics_grid()
         temp_stack->stack_actor(_qube, 0);
 
         RoundedTitleActorPtr current = std::make_shared<RoundedTitleActor>(RECT_ZERO, "CURRENT");
-        current->get_label()->set_contents("00");
+        current->set_label_contents("00");
         current->set_foreground_color(Palette::foreground);
         current->set_filled(true);
         temp_stack->stack_actor(current, 0);
@@ -63,7 +63,7 @@ ActorGridPtr PrimaryScene::initialize_statistics_grid()
 
         RoundedTitleActorPtr target = std::make_shared<RoundedTitleActor>(RECT_ZERO, "TARGET");
         target->pulsing = true;
-        target->get_label()->set_contents("00");
+        target->set_label_contents("00");
         target->set_filled(true);
         target->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
         temp_stack->stack_actor(target, 0);
@@ -167,6 +167,12 @@ PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
         _monitor.set_target_temperature(temp);
     }));
 
+    _remote.refresh_state.connect(sigc::slot<Remote::StatePair()>([this]() -> Remote::StatePair {
+        bool enabled = _monitor.get_monitoring_enabled();
+        float temperature = _monitor.get_target_temperature();
+        return Remote::StatePair(enabled, temperature);
+    }));
+
     _remote.start_listening();
 
     update_ui_state();
@@ -196,10 +202,10 @@ void PrimaryScene::update_ui_state()
     _last_sample_time = Clock::now();
 
     std::string temp_string = Utilities::string_val(current_temp);
-    _current_temp_indicator->get_label()->set_contents(temp_string);
+    _current_temp_indicator->set_label_contents(temp_string);
 
     float target_temp = _monitor.get_target_temperature();
-    _target_temp_indicator->get_label()->set_contents(Utilities::string_val(target_temp));
+    _target_temp_indicator->set_label_contents(Utilities::string_val(target_temp));
 
     bool enabled = _monitor.get_monitoring_enabled();
     bool heat_on = _monitor.get_controller().get_heater_on();
