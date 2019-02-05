@@ -284,6 +284,10 @@ void Remote::send_update_state()
     );
 
     guint status = soup_session_send_message(_http_session.get(), msg);
+    if (status != 200) {
+        fprintf(stderr, "Error sending updateState: status %u\n", status);
+    }
+
     g_object_unref(msg);
 }
 
