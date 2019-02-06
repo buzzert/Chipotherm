@@ -31,6 +31,8 @@ private:
     ActorGridPtr initialize_statistics_grid();
     ActorGridPtr initialize_controls_grid();
 
+    LabelActorPtr _online_label;
+
     RoundedTitleActorPtr _current_temp_indicator;
     RoundedTitleActorPtr _target_temp_indicator;
 

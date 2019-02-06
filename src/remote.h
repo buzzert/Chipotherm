@@ -35,7 +35,10 @@ public:
     };
     sigc::signal<State(void)> refresh_state;
 
+    bool get_online_status();
+
 private:
+    bool        _online = false;
     bool        _listening = false;
     int         _socket_fd = -1;
 

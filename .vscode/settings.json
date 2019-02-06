@@ -51,6 +51,7 @@
         "valarray": "cpp",
         "__config": "cpp",
         "__nullptr": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "string": "cpp"
     }
 }

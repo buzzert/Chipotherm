@@ -25,14 +25,13 @@ ActorGridPtr PrimaryScene::initialize_status_grid()
     title_label->set_foreground_color(Palette::foreground);
     status_grid->stack_actor(title_label, 0);
 
-    auto status_label = std::make_shared<LabelActor>(RECT_ZERO, "ONLINE ");
-    status_label->set_alignment(PangoAlignment::PANGO_ALIGN_RIGHT);
-    status_label->set_font_prop("Karla 10");
-    status_label->set_foreground_color(Color(0x00, 0xFF, 0x12, 0xFF));
-    status_grid->stack_actor(status_label, 0);
+    _online_label = std::make_shared<LabelActor>(RECT_ZERO, "Connecting... ");
+    _online_label->set_alignment(PangoAlignment::PANGO_ALIGN_RIGHT);
+    _online_label->set_font_prop("Karla 10");
+    _online_label->set_foreground_color(Color(0xFF, 0xFF, 0xFF, 0x88));
+    status_grid->stack_actor(_online_label, 0);
 
     return status_grid;
-    //main_grid->stack_actor(status_grid, 0, 30.0);
 }
 
 ActorGridPtr PrimaryScene::initialize_statistics_grid()
@@ -223,6 +222,16 @@ void PrimaryScene::update_ui_state()
         _qube->set_rotation_speed(5.0);
     } else {
         _qube->set_rotation_speed(1.0);
+    }
+
+    // Online status
+    bool online = _remote.get_online_status();
+    if (online) {
+        _online_label->set_contents("ONLINE ");
+        _online_label->set_foreground_color(Colors::green);
+    } else {
+        _online_label->set_contents("OFFLINE ");
+        _online_label->set_foreground_color(Colors::red);
     }
 
     if (enabled) {
