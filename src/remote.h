@@ -24,8 +24,8 @@ public:
     void start_listening();
 
     // Command signals
-    sigc::signal<void(bool)>  set_enabled;
-    sigc::signal<void(float)> set_temperature;
+    sigc::signal<void, bool>  set_enabled;
+    sigc::signal<void, float> set_temperature;
     
     struct State {
         bool  enabled;
@@ -33,7 +33,7 @@ public:
         float current_temp;
         float target_temp;
     };
-    sigc::signal<State(void)> refresh_state;
+    sigc::signal<State> refresh_state;
 
     bool get_online_status();
 

@@ -19,7 +19,7 @@
 #include <unistd.h>
 
 // TODO: Don't hardcode this?
-static const std::string k_server_url = "http://localhost:43001";
+static const std::string k_server_url = "http://midna.xionsf.com:43001";
 
 #define CMD_BIND(command_fn) \
     std::bind(&command_fn, this, std::placeholders::_1)

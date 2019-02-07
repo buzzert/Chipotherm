@@ -166,7 +166,7 @@ PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
         _monitor.set_target_temperature(temp);
     }));
 
-    _remote.refresh_state.connect(sigc::slot<Remote::State()>([this]() -> Remote::State {
+    _remote.refresh_state.connect(sigc::slot<Remote::State>([this]() -> Remote::State {
         bool enabled = _monitor.get_monitoring_enabled();
         float target = _monitor.get_target_temperature();
         float current = _monitor.get_controller().read_temperature();
