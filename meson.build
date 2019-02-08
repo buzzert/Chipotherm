@@ -12,7 +12,6 @@ chipotherm_deps = [
     dependency('boost'),
     dependency('libsoup-2.4'),
     dependency('pangocairo'),
-    dependency('sigc++-2.0'),
     dependency('threads'),
     dependency('hidapi-hidraw'),
     compiler.find_library('tempered'),

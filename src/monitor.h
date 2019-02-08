@@ -8,10 +8,10 @@
 
 #include "io_control.h"
 
+#include <boost/signals2.hpp>
 #include <condition_variable>
 #include <mutex>
 #include <thread>
-#include <sigc++/sigc++.h>
 
 class Monitor
 {
@@ -41,7 +41,7 @@ public:
     IOControl& get_controller() { return _controller; };
 
     bool controls_screen = false;
-    sigc::signal<void, State> state_changed;
+    boost::signals2::signal<void(State)> state_changed;
 
 private:
     bool      _simulation_mode = false;

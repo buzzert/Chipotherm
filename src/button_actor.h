@@ -6,9 +6,9 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
 #include <bubbles/bubbles.h>
 #include <functional>
-#include <sigc++/sigc++.h>
 
 using namespace Bubbles;
 
@@ -30,7 +30,7 @@ public:
     void mouse_down(int x, int y) override;
     void mouse_up(int x, int y) override;
 
-    sigc::signal<void> clicked;
+    boost::signals2::signal<void()> clicked;
 
 private:
     LabelActorPtr _label;

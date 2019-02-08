@@ -8,7 +8,6 @@
 
 #include <bubbles/bubbles.h>
 #include <chrono>
-#include <sigc++/sigc++.h>
 
 #include "button_actor.h"
 #include "graph_actor.h"
@@ -50,3 +49,4 @@ private:
     std::chrono::time_point<Clock> _last_graph_update_time;
     Monitor _monitor;
 };
+

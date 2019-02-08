@@ -84,10 +84,10 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
     {
         _heat_button = std::make_shared<ButtonActor>(RECT_ZERO);
         _heat_button->set_foreground_color(Color(0xFF, 0x00, 0x00, 0xFF));
-        _heat_button->clicked.connect(sigc::slot<void>([this]() {
+        _heat_button->clicked.connect([this]() {
             bool enabled = _monitor.get_monitoring_enabled();
             _monitor.set_monitoring_enabled(!enabled);
-        }));
+        });
         grid->stack_actor(_heat_button, 0, 160);
     }
 
@@ -99,21 +99,21 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
         auto minus_button = std::make_shared<ButtonActor>(RECT_ZERO);
         minus_button->set_label_text("-");
         minus_button->set_foreground_color(Palette::foreground);
-        minus_button->clicked.connect(sigc::slot<void>([this]() {
+        minus_button->clicked.connect([this]() {
             _monitor.set_target_temperature(_monitor.get_target_temperature() - 1);
             _target_temp_indicator->flash();
             update_ui_state();
-        }));
+        });
         subgrid->stack_actor(minus_button, 0);
 
         auto plus_button = std::make_shared<ButtonActor>(RECT_ZERO);
         plus_button->set_foreground_color(Palette::foreground);
         plus_button->set_label_text("+");
-        plus_button->clicked.connect(sigc::slot<void>([this]() {
+        plus_button->clicked.connect([this]() {
             _monitor.set_target_temperature(_monitor.get_target_temperature() + 1);
             _target_temp_indicator->flash();
             update_ui_state();
-        }));
+        });
         subgrid->stack_actor(plus_button, 0);
 
         grid->stack_actor(subgrid, 0);
@@ -128,9 +128,9 @@ PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
     // Naievely assume if we're running in windowed mode, we want to simulate
     _monitor.set_simulation_mode(windowed);
     _monitor.controls_screen = !windowed;
-    _monitor.state_changed.connect(sigc::slot<void, Monitor::State>([this](Monitor::State newstate) {
+    _monitor.state_changed.connect([this](Monitor::State newstate) {
         update_ui_state();
-    }));
+    });
 
     Rect canvasRect(0, 0, canvas_rect.width, canvas_rect.height);
 
