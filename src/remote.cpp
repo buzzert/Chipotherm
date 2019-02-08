@@ -273,7 +273,8 @@ void Remote::send_update_state()
     using boost::property_tree::write_json;
 
     // TODO: this should probably happen on the main thread?
-    Remote::State state = refresh_state();
+    Remote::State state;
+    refresh_state(state);
 
     ptree state_tree;
     state_tree.put("CurrentTemperature", state.current_temp);

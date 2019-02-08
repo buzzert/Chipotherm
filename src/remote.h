@@ -6,14 +6,16 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
 #include <libsoup/soup.h>
 #include <memory>
-#include <sigc++/sigc++.h>
 #include <sys/socket.h>
 #include <string>
 #include <thread>
 #include <unordered_map>
 #include <vector>
+
+using namespace boost::signals2;
 
 class Remote
 {
@@ -24,8 +26,8 @@ public:
     void start_listening();
 
     // Command signals
-    sigc::signal<void, bool>  set_enabled;
-    sigc::signal<void, float> set_temperature;
+    boost::signals2::signal<void(bool)>  set_enabled;
+    boost::signals2::signal<void(float)> set_temperature;
     
     struct State {
         bool  enabled;
@@ -33,7 +35,7 @@ public:
         float current_temp;
         float target_temp;
     };
-    sigc::signal<State> refresh_state;
+    boost::signals2::signal<void(State&)> refresh_state;
 
     bool get_online_status();
 

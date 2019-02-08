@@ -158,27 +158,25 @@ PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
     }
 
     // Connect signals for remote control
-    _remote.set_enabled.connect(sigc::slot<void, bool>([this](bool enabled) {
+    _remote.set_enabled.connect([this](bool enabled) {
         _monitor.set_monitoring_enabled(enabled);
-    }));
+    });
 
-    _remote.set_temperature.connect(sigc::slot<void, float>([this](float temp) {
+    _remote.set_temperature.connect([this](float temp) {
         _monitor.set_target_temperature(temp);
-    }));
+    });
 
-    _remote.refresh_state.connect(sigc::slot<Remote::State>([this]() -> Remote::State {
+    _remote.refresh_state.connect([this](Remote::State &state) {
         bool enabled = _monitor.get_monitoring_enabled();
         float target = _monitor.get_target_temperature();
         float current = _monitor.get_controller().read_temperature();
         bool heat_on = _monitor.get_controller().get_heater_on();
 
-        return Remote::State {
-            .enabled = enabled,
-            .heat_on = heat_on,
-            .current_temp = current,
-            .target_temp = target,
-        };
-    }));
+        state.enabled = enabled;
+        state.heat_on = heat_on;
+        state.current_temp = current;
+        state.target_temp = target;
+    });
 
     _remote.start_listening();
 
