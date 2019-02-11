@@ -203,19 +203,23 @@ void PrimaryScene::update()
 
 void PrimaryScene::update_ui_state()
 {
-    float current_temp = _monitor.get_controller().read_temperature();
     _last_sample_time = Clock::now();
+    
+    bool enabled = _monitor.get_monitoring_enabled();
+    bool heat_on = _monitor.get_controller().get_heater_on();
+    
+    // Update current temperature
+    float current_temp = _monitor.get_controller().read_temperature();
+    _current_temp_indicator->set_label_contents(Utilities::string_val(current_temp));
 
-    std::string temp_string = Utilities::string_val(current_temp);
-    _current_temp_indicator->set_label_contents(temp_string);
-
+    // Update target temperature
     float target_temp = _monitor.get_target_temperature();
     _target_temp_indicator->set_label_contents(Utilities::string_val(target_temp));
 
-    bool enabled = _monitor.get_monitoring_enabled();
-    bool heat_on = _monitor.get_controller().get_heater_on();
+    // Target temperature rect pulses if heat is on
     _target_temp_indicator->pulsing = heat_on;
     
+    // Qube rotates faster if heat is on
     if (heat_on) {
         _qube->set_rotation_speed(5.0);
     } else {
@@ -232,18 +236,25 @@ void PrimaryScene::update_ui_state()
         _online_label->set_foreground_color(Colors::red);
     }
 
+    // Monitoring status
     if (enabled) {
+        // Qube is red if monitoring is enabled
         _qube->set_color(Color(0xFF, 0x00, 0x00, 0xFF));
 
+        // Target temperature is opaque
         _target_temp_indicator->set_alpha(1.0);
 
+        // Heat button filled
         _heat_button->set_label_text("DISABLE");
         _heat_button->set_filled(true);
     } else {
+        // If monitoring is disabled, qube is foreground color
         _qube->set_color(Palette::foreground);
 
+        // Target temperature is transparend (dark)
         _target_temp_indicator->set_alpha(0.5);
 
+        // Heat button is an outline
         _heat_button->set_label_text("ENABLE");
         _heat_button->set_filled(false);
     }
