@@ -35,9 +35,9 @@ Here's how to set that up:
 
 ### Hardware Installation
 3. Attach a electronic relay (such as [this one](https://www.amazon.com/WINGONEER-KY-019-Channel-Module-arduino/dp/B06XHJ2PBJ/ref=sr_1_3?ie=UTF8&qid=1549857207&sr=8-3&keywords=electronic+relay)) to the CHIP.
-    a. Connect +3.3V to the VIN pin on the relay
-    b. Connect ground to ground on the CHIP
-    c. Connect `S` or whatever the signal pin is to the CHIP's `GPIO 1` pin
+    * Connect +3.3V to the VIN pin on the relay
+    * Connect ground to ground on the CHIP
+    * Connect `S` or whatever the signal pin is to the CHIP's `GPIO 1` pin
 4. Attach the "hot" and "neutral" wires to the relay, such that when the relay is closed it completes the circuit between the two wires. It might be a good idea to test with a multi-meter before installing. A correct installation would be +240V (in the US) from the hot wire and +0V from the neutral wire. It is important that you do not connect these directly to the Pocket CHIP! You must use a relay!
 
 ## Remote Control
