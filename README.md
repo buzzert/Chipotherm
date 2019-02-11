@@ -44,5 +44,11 @@ Here's how to set that up:
 [bubbles](https://github.com/buzzert/bubbles) is used for the user interface for this project.
 
 ## Requirements
-libsdl2-dev libsdl-pango-dev libsdl2-image-dev [libtempered](https://github.com/hbt/TEMPered)
+[libtempered](https://github.com/hbt/TEMPered)
+[bubbles](https://github.com/buzzert/bubbles)
+boost
+hidapi-hidraw
+libsoup-2.4
+pangocairo
+threads
 
