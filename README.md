@@ -1,5 +1,5 @@
 # Chipotherm
-Chipotherm is a electronic thermostat for the now defunct [Pocket C.H.I.P.](https://en.wikipedia.org/wiki/CHIP_(computer)#Pocket_CHIP_and_Pockulus) computer. 
+Chipotherm is a electronic thermostat for the [Pocket C.H.I.P.](https://en.wikipedia.org/wiki/CHIP_(computer)#Pocket_CHIP_and_Pockulus) computer. 
 
 ![Picture of the CHIP running Chipotherm](photos/CHIP.jpeg)
 
