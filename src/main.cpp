@@ -19,15 +19,24 @@ int main(int argc, char **argv)
     const int canvasWidth = 480;
     const int canvasHeight = 272;
 
+    // Options
     float scale = 1.0; // for testing on hiDPI
     bool windowed = false;
-    if (argc > 1 && strcmp("-w", argv[1]) == 0) {
+    std::string server_url = "";
+
+    int opt_idx = 1;
+    if (argc > opt_idx && strcmp("-w", argv[opt_idx]) == 0) {
         windowed = true;
         scale = 2.0;
+        opt_idx++;
     }
 
-    PrimaryScene mainScene(Rect(0, 0, canvasWidth, canvasHeight), windowed, scale);
-    mainScene.set_scale(scale);
+    if (argc > opt_idx && strlen(argv[opt_idx]) > 0) {
+        server_url = std::string(argv[opt_idx]);
+        opt_idx++;
+    }
+
+    PrimaryScene mainScene(Rect(0, 0, canvasWidth, canvasHeight), windowed, scale, server_url);
     if (!windowed) {
         mainScene.set_hides_cursor(true);
     }

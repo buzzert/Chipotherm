@@ -20,7 +20,10 @@ public:
         return instance;
     }
 
-    void iterate();    
+    // Call this in the program's main run loop, flushes pending tasks
+    void iterate();
+
+    // Schedules a task to be executed on the next turn of the runloop
     void schedule_task(const RunloopTask &task);
 
 private:

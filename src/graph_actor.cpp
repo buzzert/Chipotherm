@@ -68,10 +68,12 @@ void GraphActor::render(cairo_t *cr, Rect at_rect)
     }
     mean_val /= _samples.size();
 
+    // `scale_val` represents the scale factor applied to the graph so it fits the lowest value
+    // and the highest value
     double scale_val = (1.0 / MAX(1.0, (high_val - low_val)));
 
-    const double y_padding = 10.0;
     double x_offset = width;
+    const double y_padding = 10.0;
     for (unsigned i = 0; i < _samples.size(); i++) {
         unsigned rev_idx = _samples.size() - 1 - i;
         Sample s = _samples.at(rev_idx);
@@ -92,9 +94,10 @@ void GraphActor::render(cairo_t *cr, Rect at_rect)
     cairo_stroke(cr);
 
     // Draw measurement lines
-    cairo_set_line_width(cr, 1.0);
+    const double measure_line_width = 1.0;
+    cairo_set_line_width(cr, measure_line_width);
     cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.1);
-    x_offset = width;
+    x_offset = width - measure_line_width;
     for (unsigned i = 0; i < _samples.size(); i++) {
         cairo_move_to(cr, x_offset, y_padding);
         cairo_line_to(cr, x_offset, height - y_padding);

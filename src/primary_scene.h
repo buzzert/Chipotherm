@@ -21,7 +21,8 @@ using namespace Bubbles;
 class PrimaryScene : public MainScene
 {
 public:
-    PrimaryScene(Rect canvasRect, bool windowed, double scale = 1.0);
+    // `server_url` refers to the command and control server
+    PrimaryScene(Rect canvasRect, bool windowed, double scale, std::string server_url);
 
     void update() override;
 

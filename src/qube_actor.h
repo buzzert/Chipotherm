@@ -31,7 +31,7 @@ public:
 
 private:
     float  _rotation_speed = 1.0;
-    double _time_offset;
+    double _time_offset = 0.0;
     Color  _color;
 
     void draw_line(cairo_t *cr, double x1, double y1, double x2, double y2, double size);

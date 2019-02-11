@@ -4,6 +4,9 @@
  * Copyright (c) 2019 James Magahern <james@magahern.com>
  */
 
+// TODO: currently a lot of this behavior overlaps with button_actor. Ideally,
+// button_actor would encapsulate a rounded_title_actor instead. 
+
 #pragma once
 
 #include <bubbles/bubbles.h>

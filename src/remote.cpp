@@ -18,9 +18,6 @@
 #include <sys/un.h>
 #include <unistd.h>
 
-// TODO: Don't hardcode this?
-static const std::string k_server_url = "http://midna.xionsf.com:43001";
-
 #define CMD_BIND(command_fn) \
     std::bind(&command_fn, this, std::placeholders::_1)
 
@@ -136,11 +133,20 @@ bool Remote::get_online_status()
     return _online;
 }
 
-void Remote::start_listening()
+void Remote::start_listening(std::string server_url)
 {
+    _server_url = server_url;
     _listening = true;
+    
     _socket_listener_thread = std::thread(&Remote::socket_listener_main, this);
-    _http_polling_thread = std::thread(&Remote::http_polling_main, this);
+
+    // TODO: Maybe try to resolve server url first to be a little smarter about this?
+    if (server_url.size() > 0) {
+        _http_polling_thread = std::thread(&Remote::http_polling_main, this);
+    } else {
+        _online = false;
+        fprintf(stderr, "Warning: no server url provided, not starting http polling\n");
+    }
 
     // TODO: would be nice if this sent an updated state right away, but the current
     // state hasn't been populated yet, so this needs to happen later. Maybe introduce
@@ -219,7 +225,7 @@ void Remote::http_polling_main()
     _online = true;
 
     while (_listening) {
-        SoupMessage *msg = soup_message_new("GET", (k_server_url + "/poll").c_str());
+        SoupMessage *msg = soup_message_new("GET", (_server_url + "/poll").c_str());
         guint status = soup_session_send_message(_http_session.get(), msg);
         if (status == 200) {
             _online = true;
@@ -258,6 +264,12 @@ void Remote::http_polling_main()
                 case SOUP_STATUS_IO_ERROR:
                     // Probably just timed out, go and try again
                     continue;
+                case SOUP_STATUS_MALFORMED:
+                    // Fatal.
+                    fprintf(stderr, "Malformed request. Bailing...");
+                    _online = false;
+                    _listening = false;
+                    break;
                 default:
                     continue;
             }
@@ -285,7 +297,7 @@ void Remote::send_update_state()
     std::ostringstream buf;
     write_json(buf, state_tree, true);
 
-    SoupMessage *msg = soup_message_new("POST", (k_server_url + "/updateState").c_str());
+    SoupMessage *msg = soup_message_new("POST", (_server_url + "/updateState").c_str());
     soup_message_set_request(
         msg, 
         "application/text",

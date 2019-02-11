@@ -26,7 +26,7 @@ public:
 private:
     struct Sample {
         double value;
-        // timestaemp?
+        // timestamp?
     };
 
     std::shared_ptr<LabelActor> _label;

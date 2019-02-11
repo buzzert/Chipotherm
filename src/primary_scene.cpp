@@ -122,7 +122,7 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
     return grid;
 }
 
-PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
+PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale, std::string server_url)
     : MainScene(canvas_rect, windowed, scale)
 {
     // Naievely assume if we're running in windowed mode, we want to simulate
@@ -178,7 +178,7 @@ PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale)
         state.target_temp = target;
     });
 
-    _remote.start_listening();
+    _remote.start_listening(server_url);
 
     update_ui_state();
 }

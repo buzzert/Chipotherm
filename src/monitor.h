@@ -29,6 +29,8 @@ public:
 
     Monitor();
 
+    // Simulation mode provides a fake temperature and the current temperature pretends
+    // to fluctuate while the heater is on. 
     void set_simulation_mode(bool simulate);
 
     void set_monitoring_enabled(bool enabled);
@@ -40,7 +42,12 @@ public:
     State get_current_state() const { return _state; };
     IOControl& get_controller() { return _controller; };
 
+    // Set this to `true` to automatically enable/disable DPMS (display sleep)
+    // If this is enabled, only while monitoring is enabled will the monitor remain awake,
+    // otherwise the typical timeout is enforced via X11. 
     bool controls_screen = false;
+
+    // Attach to this signal to be notified when the state changes (see State enum above)
     boost::signals2::signal<void(State)> state_changed;
 
 private:
