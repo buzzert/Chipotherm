@@ -5,7 +5,7 @@ Chipotherm is a electronic thermostat for the [Pocket C.H.I.P.](https://en.wikip
 
 It supports automatic temperature monitoring, a temperature graph of past measurements, and a cool futuristic UI.
 
-You can also control it remotely, either via a TCP socket or by installing the Chipotherm Server.
+You can also control it remotely, either via a TCP socket or by installing the [Chipotherm Server](https://github.com/buzzert/CHIPotherm-Server).
 
 ## Building
 Make sure to build with clang for C++14 support. 
@@ -39,6 +39,17 @@ Here's how to set that up:
     b. Connect ground to ground on the CHIP
     c. Connect `S` or whatever the signal pin is to the CHIP's `GPIO 1` pin
 4. Attach the "hot" and "neutral" wires to the relay, such that when the relay is closed it completes the circuit between the two wires. It might be a good idea to test with a multi-meter before installing. A correct installation would be +240V (in the US) from the hot wire and +0V from the neutral wire. It is important that you do not connect these directly to the Pocket CHIP! You must use a relay!
+
+## Remote Control
+Chipotherm can be controlled remotely, either via messaging the UNIX socket it creates (located in /run/user/[your uid]/chipotherm/socket) or by running a command-and-control server such as [Chipotherm Server](https://github.com/buzzert/CHIPotherm-Server). 
+
+To have Chipotherm connect to a command-and-control server, start the server on another box (such as a VPS), and start chipotherm providing the command-and-control server as the first argument. For example:
+    `chipotherm 'http://myserver.local:43001'`
+
+### Control via the socket
+In the future, I'd like to provide a nicer interface for doing this, but for now you can message the socket using the `socat` command on Linux:
+    `echo "set_enabled 1" | socat - UNIX-CONNECT:/var/run/user/1000/chipotherm/socket`
+
 
 ## Submodules
 [bubbles](https://github.com/buzzert/bubbles) is used for the user interface for this project.
