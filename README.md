@@ -24,9 +24,9 @@ Here's how to set that up:
 1. Make sure you're building on a 32-bit Debian-based system (in a VM for instance)
 2. `mkdir /var/jessie_armhf`
 3. Bootstrap an ARM Debian Jessie instance using `qemu-debootstrap`
-    qemu-debootstrap --arch armhf jessie /var/jessie_armhf http://deb.debian.org/debian/
+    > `qemu-debootstrap --arch armhf jessie /var/jessie_armhf http://deb.debian.org/debian/`
 4. Copy the qemu interpreter to the new root
-    cp /usr/bin/qemu-arm-static /var/jessie_armhf/usr/bin
+    > `cp /usr/bin/qemu-arm-static /var/jessie_armhf/usr/bin`
 5. `chroot` to the newly created debian root and install build dependencies in there. (See "Requirements" section)
 
 ## Installing
