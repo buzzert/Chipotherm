@@ -14,7 +14,8 @@
 #include "runloop.h"
 
 // How often to allow the heater to toggle between engaged/disengaged
-static const std::chrono::seconds k_toggle_hysteresis(30);
+static const float k_temperature_hysteresis = 2; // in degrees
+static const std::chrono::seconds k_toggle_hysteresis(30); // in seconds
 
 Monitor::Monitor()
 {}
@@ -31,7 +32,7 @@ void Monitor::monitor_main()
 
         float current_temperature = _controller.read_temperature();
         bool heater_engaged = (std::round(current_temperature) < _target_temperature);
-        set_heater_engaged_if_time_allows(heater_engaged);
+        set_heater_engaged_if_time_allows(heater_engaged, current_temperature);
 
         std::unique_lock<std::mutex> lk(_monitor_mutex);
         _monitor_condition.wait_for(lk, 2s);
@@ -74,6 +75,7 @@ void Monitor::set_monitoring_enabled(bool enabled)
         }
 
         // Reset throttle
+        _num_cycles = 0;
         _last_engagement_time = Clock::now() - std::chrono::hours(1);
 
         transition_to_state(State::IDLE);    
@@ -93,7 +95,7 @@ void Monitor::set_monitoring_enabled(bool enabled)
     }
 }
 
-void Monitor::set_heater_engaged_if_time_allows(bool engaged)
+void Monitor::set_heater_engaged_if_time_allows(bool engaged, float current_temperature)
 {
     bool heater_on = _controller.get_heater_on();
     if (engaged == heater_on) return;
@@ -104,7 +106,10 @@ void Monitor::set_heater_engaged_if_time_allows(bool engaged)
         hysteresis = std::chrono::seconds(5);
     }
 
-    if (Clock::now() - _last_engagement_time > hysteresis) {
+    bool time_allows = (Clock::now() - _last_engagement_time) > hysteresis;
+    bool hysteresis_allows = fabsf(_target_temperature - current_temperature) > k_temperature_hysteresis;
+
+    if (time_allows && (hysteresis_allows || _num_cycles == 0)) {
         printf("Setting heater to: %s\n", engaged ? "ON" : "OFF");
 
         _controller.set_heater_on(engaged);
@@ -115,6 +120,8 @@ void Monitor::set_heater_engaged_if_time_allows(bool engaged)
         } else {
             transition_to_state(State::IDLE);
         }
+
+        _num_cycles++;
     }
 }
 

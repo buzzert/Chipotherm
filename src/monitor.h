@@ -54,6 +54,7 @@ private:
     bool      _simulation_mode = false;
     bool      _enabled = false;
     float     _target_temperature = 73.0;
+    unsigned  _num_cycles = 0;
 
     State     _state = State::DISABLED;
     IOControl _controller;
@@ -68,5 +69,5 @@ private:
     void monitor_main();
     void transition_to_state(State newstate);
     void update_simulation_state();
-    void set_heater_engaged_if_time_allows(bool engaged);
+    void set_heater_engaged_if_time_allows(bool engaged, float current_temperature);
 };
