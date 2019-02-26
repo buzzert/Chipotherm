@@ -43,11 +43,11 @@ private:
     bool   _filled;
     Color  _foreground_color;
 
-    double _pulse_begin = 0;
+    double _pulse_begin = 0.0;
     bool   _pulse_direction = false;
     double _pulse_progress = 0.0;
 
     bool   _flashing = false;
     double _flash_progress = 0.0;
-    double _flash_begin = 0;
+    double _flash_begin = 0.0;
 };

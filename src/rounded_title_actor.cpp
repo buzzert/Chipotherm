@@ -79,8 +79,13 @@ void RoundedTitleActor::update()
 
     // Pulse animation
     if (pulsing) {
+        if (_pulse_begin == 0.0) {
+            // Initialize this if 0
+            _pulse_begin = now;
+        }
+
         const double pulse_duration = 0.4;
-        double progress = (now - _pulse_begin) / pulse_duration;
+        float progress = (now - _pulse_begin) / pulse_duration;
         if (!_pulse_direction) {
             _pulse_progress = MAX(0.0, 1.0 - progress);
         } else {
