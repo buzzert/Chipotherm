@@ -89,6 +89,7 @@ Remote::~Remote()
 {
     close(_socket_fd);
     _listening = false;
+    _polling = false;
     _http_polling_thread.join();
     _socket_listener_thread.join();
 }
@@ -223,8 +224,9 @@ Remote::CommandFn Remote::cmd_handle_server_cmd(const CommandArgs args)
 void Remote::http_polling_main()
 {
     _online = true;
+    _polling = true;
 
-    while (_listening) {
+    while (_polling) {
         SoupMessage *msg = soup_message_new("GET", (_server_url + "/poll").c_str());
         guint status = soup_session_send_message(_http_session.get(), msg);
         if (status == 200) {
@@ -268,7 +270,7 @@ void Remote::http_polling_main()
                     // Fatal.
                     fprintf(stderr, "Malformed request. Bailing...");
                     _online = false;
-                    _listening = false;
+                    _polling = false;
                     break;
                 default:
                     continue;

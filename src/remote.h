@@ -51,6 +51,7 @@ public:
 private:
     bool        _online = false;
     bool        _listening = false;
+    bool        _polling = false;
     int         _socket_fd = -1;
 
     std::thread _socket_listener_thread;
