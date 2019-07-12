@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+    chipotherm:
+        image: buzzert/chipotherm
+        container_name: chipotherm 
+        build: .
+        volumes:
+            - .:/code
+        privileged: true
+

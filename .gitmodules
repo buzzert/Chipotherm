@@ -1,3 +1,9 @@
 [submodule "lib/bubbles"]
 	path = lib/bubbles
 	url = buzzert.net:repos/bubbles
+[submodule "subprojects/bubbles"]
+	path = subprojects/bubbles
+	url = git@github.com:buzzert/bubbles.git
+[submodule "subprojects/TEMPered"]
+	path = subprojects/TEMPered
+	url = git@github.com:hbt/TEMPered.git
