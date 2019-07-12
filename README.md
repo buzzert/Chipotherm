@@ -11,13 +11,20 @@ You can also control it remotely, either via a TCP socket or by installing the [
 Make sure to build with clang for C++14 support. 
 (Ensure default c++ compiler with `update-alternatives --config c++`)
 
-This project uses the Meson build system
 ```
-meson build
-ninja -C build
+mkdir build && cmake .. && make
 ```
 
 ### Building for Pocket C.H.I.P.
+
+#### Easy way (Docker)
+1. `docker-compose build`
+2. Copy built products from docker container 
+    `docker create --name build buzzert/chipotherm` 
+    `docker cp build:/code/chip_build .`
+
+#### Hard way (Manual)
+
 The best way to build for the Pocket C.H.I.P. is via a QEMU root using Debian Jessie (the distribution the CHIP is using).
 
 Here's how to set that up:
