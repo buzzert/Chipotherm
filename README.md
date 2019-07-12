@@ -21,7 +21,7 @@ mkdir build && cmake .. && make
 1. `docker-compose build`
 2. Copy built products from docker container 
     `docker create --name build buzzert/chipotherm` 
-    `docker cp build:/code/chip_build .`
+    `docker cp build:/chipotherm/chip_build .`
 
 #### Hard way (Manual)
 
