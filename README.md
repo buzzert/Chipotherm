@@ -18,10 +18,8 @@ mkdir build && cmake .. && make
 ### Building for Pocket C.H.I.P.
 
 #### Easy way (Docker)
-1. `docker-compose build`
-2. Copy built products from docker container 
-    `docker create --name build buzzert/chipotherm` 
-    `docker cp build:/chipotherm/chip_build .`
+1. Run `build_device.sh`
+2. The built product will be extracted to `build_device`
 
 #### Hard way (Manual)
 
