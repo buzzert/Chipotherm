@@ -83,7 +83,7 @@ void Monitor::set_monitoring_enabled(bool enabled)
     } else {
         // Re-enable display blanking
         if (controls_screen) {
-            system("xset s off +dpms");
+            system("xset s off dpms 3600 3600 3600");
         }
 
         // Turn off heater
