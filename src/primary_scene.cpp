@@ -40,36 +40,8 @@ ActorGridPtr PrimaryScene::initialize_statistics_grid()
     grid->set_padding(10.0);
 
     // Clock
-    //auto clock_actor = std::make_shared<ClockActor>(Rect());
-    //grid->stack_actor(clock_actor, 0, 50.0);
-
-    // Lithium Mode
-    {
-        auto lithium_mode_stack = std::make_shared<ActorGrid>(RECT_ZERO, 1);
-        lithium_mode_stack->set_orientation(ActorGrid::Orientation::HORIZONTAL);
-        grid->stack_actor(lithium_mode_stack, 0, 50.0);
-
-        auto lithium_mode_label = std::make_shared<LabelActor>(RECT_ZERO, " Lithium Mode");
-        lithium_mode_label->set_font_prop("Karla 10");
-        lithium_mode_label->set_alignment(PangoAlignment::PANGO_ALIGN_CENTER);
-        lithium_mode_label->set_foreground_color(Palette::foreground);
-        lithium_mode_stack->stack_actor(lithium_mode_label, 0);
-
-        _lithium_mode_button = std::make_shared<ButtonActor>(RECT_ZERO);
-        _lithium_mode_button->clicked.connect([this] {
-            lithium_enabled = !lithium_enabled;
-            if (lithium_enabled) {
-                _sounds.play_sound(SoundEngine::Sound::LithiumOn);
-            } else {
-                _sounds.play_sound(SoundEngine::Sound::LithiumOff);
-            }
-            update_ui_state();
-        });
-
-        _lithium_mode_button->set_foreground_color(Color(0x00, 0xFF, 0x00, 0xFF));
-        _lithium_mode_button->set_label_font_prop("Karla 12");
-        lithium_mode_stack->stack_actor(_lithium_mode_button, 0);
-    }
+    auto clock_actor = std::make_shared<ClockActor>(Rect());
+    grid->stack_actor(clock_actor, 0, 50.0);
 
     // Temperatures 
     {
@@ -116,7 +88,7 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
             bool enabled = _monitor.get_monitoring_enabled();
             user_set_monitoring_enabled(!enabled);
         });
-        grid->stack_actor(_heat_button, 0, 160);
+        grid->stack_actor(_heat_button, 0, 120);
     }
 
     // Temperature adjustment
@@ -149,6 +121,34 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
         subgrid->stack_actor(plus_button, 0);
 
         grid->stack_actor(subgrid, 0);
+    }
+
+    // Lithium Mode
+    {
+        auto lithium_mode_stack = std::make_shared<ActorGrid>(RECT_ZERO, 1);
+        lithium_mode_stack->set_orientation(ActorGrid::Orientation::HORIZONTAL);
+        grid->stack_actor(lithium_mode_stack, 0, 50.0);
+
+        auto lithium_mode_label = std::make_shared<LabelActor>(RECT_ZERO, " Lithium Mode");
+        lithium_mode_label->set_font_prop("Karla 10");
+        lithium_mode_label->set_alignment(PangoAlignment::PANGO_ALIGN_CENTER);
+        lithium_mode_label->set_foreground_color(Color(0x00, 0xFF, 0x00, 0xFF));
+        lithium_mode_stack->stack_actor(lithium_mode_label, 0);
+
+        _lithium_mode_button = std::make_shared<ButtonActor>(RECT_ZERO);
+        _lithium_mode_button->clicked.connect([this] {
+            lithium_enabled = !lithium_enabled;
+            if (lithium_enabled) {
+                _sounds.play_sound(SoundEngine::Sound::LithiumOn);
+            } else {
+                _sounds.play_sound(SoundEngine::Sound::LithiumOff);
+            }
+            update_ui_state();
+        });
+
+        _lithium_mode_button->set_foreground_color(Color(0x00, 0xFF, 0x00, 0xFF));
+        _lithium_mode_button->set_label_font_prop("Karla 12");
+        lithium_mode_stack->stack_actor(_lithium_mode_button, 0);
     }
 
     return grid;
