@@ -15,6 +15,7 @@
 #include "remote.h"
 #include "rounded_title_actor.h"
 #include "qube_actor.h"
+#include "sounds.h"
 
 using namespace Bubbles;
 
@@ -30,6 +31,7 @@ private:
     ActorGridPtr initialize_status_grid();
     ActorGridPtr initialize_statistics_grid();
     ActorGridPtr initialize_controls_grid();
+    void user_set_monitoring_enabled(bool enabled);
 
     LabelActorPtr _online_label;
 
@@ -40,6 +42,7 @@ private:
     QubeActorPtr  _qube;
 
     ButtonActorPtr _heat_button;
+    ButtonActorPtr _lithium_mode_button;
 
     Remote _remote;
 
@@ -49,5 +52,9 @@ private:
     std::chrono::time_point<Clock> _last_sample_time;
     std::chrono::time_point<Clock> _last_graph_update_time;
     Monitor _monitor;
+
+    SoundEngine _sounds;
+
+    bool lithium_enabled;
 };
 

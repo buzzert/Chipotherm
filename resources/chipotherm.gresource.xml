@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+    <gresource prefix="/net/buzzert/chipotherm/">
+        <file>sounds/enable.wav</file>
+        <file>sounds/disable.wav</file>
+        <file>sounds/modify.wav</file>
+        <file>sounds/lithium_on.wav</file>
+        <file>sounds/lithium_off.wav</file>
+    </gresource>
+</gresources>

@@ -20,6 +20,7 @@ public:
     ButtonActor(Rect r);
 
     void set_label_text(const std::string &str);
+    void set_label_font_prop(const std::string &font_prop);
     void set_foreground_color(Color c) { _foreground_color = c; };
     void set_highlighted(bool highlighted);
     void set_filled(bool filled);

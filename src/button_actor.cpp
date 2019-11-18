@@ -41,6 +41,12 @@ void ButtonActor::set_label_text(const std::string &str)
     _needs_layout = true;
 }
 
+void ButtonActor::set_label_font_prop(const std::string &font_prop)
+{
+    _label->set_font_prop(font_prop);
+    _needs_layout = true;
+}
+
 void ButtonActor::layout_actors()
 {
     Actor::layout_actors();
