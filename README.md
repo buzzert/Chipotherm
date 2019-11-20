@@ -55,6 +55,20 @@ To have Chipotherm connect to a command-and-control server, start the server on 
 In the future, I'd like to provide a nicer interface for doing this, but for now you can message the socket using the `socat` command on Linux:
     `echo "set_enabled 1" | socat - UNIX-CONNECT:/var/run/user/1000/chipotherm/socket`
 
+## Sounds
+Sounds make using this a lot more fun. Unfortunately the Pocker CHIP's sound driver does this annoying power-saving thing that makes it so all the sounds are super delayed. To fix this, I had to make a systemd unit to play silence continuously so the sound card doesn't go to sleep.
+```
+[Unit]
+Description=Continuous silence
+
+[Service]
+ExecStart=/usr/bin/play -qn
+
+[Install]
+WantedBy=default.target
+```
+
+Requires `sox` package for `play`. Even worse than that, ALSA is so old it doesn't do software mixing by default. You have to enable that by editing /etc/asound.conf. This configuration file is located in this project under utils/asound.conf.
 
 ## Submodules
 [bubbles](https://github.com/buzzert/bubbles) is used for the user interface for this project.

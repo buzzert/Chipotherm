@@ -22,6 +22,8 @@ public:
         Modify,
         LithiumOn,
         LithiumOff,
+
+        kNumSounds
     } Sound;
 
     SoundEngine();
@@ -31,6 +33,7 @@ public:
 
 private:
     ca_context *_ca_context;
+    std::string cache_sound_on_disk_and_get_realpath(Sound sound);
     std::string sound_filename(Sound sound);
 };
 

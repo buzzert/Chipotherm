@@ -55,6 +55,6 @@ private:
 
     SoundEngine _sounds;
 
-    bool lithium_enabled;
+    bool _lithium_enabled = false;
 };
 

@@ -137,8 +137,8 @@ ActorGridPtr PrimaryScene::initialize_controls_grid()
 
         _lithium_mode_button = std::make_shared<ButtonActor>(RECT_ZERO);
         _lithium_mode_button->clicked.connect([this] {
-            lithium_enabled = !lithium_enabled;
-            if (lithium_enabled) {
+            _lithium_enabled = !_lithium_enabled;
+            if (_lithium_enabled) {
                 _sounds.play_sound(SoundEngine::Sound::LithiumOn);
             } else {
                 _sounds.play_sound(SoundEngine::Sound::LithiumOff);
@@ -217,14 +217,16 @@ PrimaryScene::PrimaryScene(Rect canvas_rect, bool windowed, double scale, std::s
 
 void PrimaryScene::user_set_monitoring_enabled(bool enabled)
 {
-    _monitor.set_monitoring_enabled(enabled);
-
     // Play sound
-    if (enabled) {
-        _sounds.play_sound(SoundEngine::Sound::Enable);
-    } else {
-        _sounds.play_sound(SoundEngine::Sound::Disable);
+    if (enabled != _monitor.get_monitoring_enabled()) {
+        if (enabled) {
+            _sounds.play_sound(SoundEngine::Sound::Enable);
+        } else {
+            _sounds.play_sound(SoundEngine::Sound::Disable);
+        }
     }
+
+    _monitor.set_monitoring_enabled(enabled);
 }
 
 void PrimaryScene::update()
@@ -304,7 +306,7 @@ void PrimaryScene::update_ui_state()
     }
 
     // Lithium mode
-    if (lithium_enabled) {
+    if (_lithium_enabled) {
         _lithium_mode_button->set_label_text("ON");
     } else {
         _lithium_mode_button->set_label_text("OFF");
