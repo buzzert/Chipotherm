@@ -27,6 +27,9 @@ public:
 
     void update() override;
 
+protected:
+    void pointer_event(int x, int y, bool pressed) override;
+
 private:
     ActorGridPtr initialize_status_grid();
     ActorGridPtr initialize_statistics_grid();

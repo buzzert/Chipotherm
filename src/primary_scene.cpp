@@ -229,6 +229,12 @@ void PrimaryScene::user_set_monitoring_enabled(bool enabled)
     _monitor.set_monitoring_enabled(enabled);
 }
 
+void PrimaryScene::pointer_event(int x, int y, bool pressed)
+{
+    // todo: no op if dpms is off
+    MainScene::pointer_event(x, y, pressed);
+}
+
 void PrimaryScene::update()
 {
     MainScene::update();

@@ -65,6 +65,7 @@ std::string SoundEngine::sound_filename(Sound sound)
             return "lithium_on.wav";
         case Sound::LithiumOff:
             return "lithium_off.wav";
+        default: break;
     }
 
     assert(false);
