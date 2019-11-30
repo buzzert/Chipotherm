@@ -6,6 +6,7 @@
 
 #include "io_control.h"
 
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -27,7 +28,7 @@ float IOControl::read_temperature()
             fprintf(stderr, "Error reading temperature from device\n");
             resultF = -1.0; // report -1 so it's really obvious something is wrong in the UI
         } else {
-            resultF = (resultC * (9.0 / 5.0) + 32.0);
+            resultF = (resultC * (9.0f / 5.0f) + 32.0f);
         }
         
         return resultF;
@@ -61,6 +62,28 @@ bool IOControl::get_heater_on()
         // See note in set_on for why this is inverted.
         return !status;
     }
+}
+
+bool IOControl::get_display_on()
+{
+    if (simulate) {
+        // Simulation lies.
+        return true;
+    }
+
+    if (!_display_device) {
+        // Assume display is on
+        fprintf(stderr, "Error: get_display_on with no active display device\n");
+        return true;
+    }
+
+    const char *dpms_value = udev_device_get_sysattr_value(_display_device.get(), "dpms");
+    if (dpms_value == nullptr) {
+        fprintf(stderr, "Error: get_display_on getting dpms sysattr value\n");
+        return true;
+    }
+
+    return (strcmp(dpms_value, "On") == 0);
 }
 
 void IOControl::initialize_devices_if_necessary()
@@ -113,6 +136,51 @@ void IOControl::initialize_devices_if_necessary()
 
             _relay_switch_path = base_path_string.str() + "/value";
             set_heater_on(false); // set to OFF as initial state
+        } while (0);
+    }
+
+    // Display (for blocking hit testing when asleep)
+    if (!_display_device) {
+        do {
+            struct udev *udev = udev_new();
+            if (!udev) {
+                fprintf(stderr, "Error initializing udev\n");
+                break;
+            }
+
+            // Scan drm devices (display devices)
+            struct udev_enumerate *enumerate = udev_enumerate_new(udev);
+            udev_enumerate_add_match_subsystem(enumerate, "drm");
+            udev_enumerate_scan_devices(enumerate);
+
+
+            struct udev_list_entry *dev_list_entry;
+            struct udev_device *active_monitor_device = nullptr;
+            struct udev_list_entry *devices = udev_enumerate_get_list_entry(enumerate);
+
+            // Locate active monitor device (drm device whose enabled="enabled")
+            udev_list_entry_foreach(dev_list_entry, devices) {
+                const char *path = udev_list_entry_get_name(dev_list_entry);
+                struct udev_device *dev = udev_device_new_from_syspath(udev, path);
+                if (!dev) continue;
+
+                const char *val = udev_device_get_sysattr_value(dev, "enabled");
+                if (val && strcmp(val, "enabled") == 0) {
+                    active_monitor_device = dev;
+                } else {
+                    udev_device_unref(dev);
+                }
+            }
+
+            udev_enumerate_unref(enumerate);
+
+            if (active_monitor_device != nullptr) {
+                fprintf(stderr, "Found active monitor device\n");
+                _display_device = std::shared_ptr<udev_device>(active_monitor_device, udev_device_unref);
+            }
+
+            udev_unref(udev);
+
         } while (0);
     }
 }

@@ -7,6 +7,7 @@
 #pragma once
 
 #include <memory>
+#include <libudev.h>
 #include <stdbool.h>
 #include <tempered.h>
 
@@ -19,6 +20,8 @@ public:
     void set_heater_on(bool on);
     bool get_heater_on();
 
+    bool get_display_on();
+
     // Simulation
     bool simulate = false;
     float simulated_temperature = 69.2;
@@ -28,5 +31,6 @@ private:
 
     std::string                      _relay_switch_path;
     std::shared_ptr<tempered_device> _monitor_device;
+    std::shared_ptr<udev_device>     _display_device;
     void initialize_devices_if_necessary();
 };

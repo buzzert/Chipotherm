@@ -231,8 +231,12 @@ void PrimaryScene::user_set_monitoring_enabled(bool enabled)
 
 void PrimaryScene::pointer_event(int x, int y, bool pressed)
 {
-    // todo: no op if dpms is off
-    MainScene::pointer_event(x, y, pressed);
+    // Block pointer events when display is off
+    if (_monitor.get_controller().get_display_on()) {
+        MainScene::pointer_event(x, y, pressed);
+    } else {
+        // drop the touch.
+    }
 }
 
 void PrimaryScene::update()
