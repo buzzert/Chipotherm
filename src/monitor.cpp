@@ -137,15 +137,13 @@ void Monitor::set_target_temperature(float target)
 
 void Monitor::transition_to_state(State newstate)
 {
-    bool schedule_cooldown = (_state == State::HEATING && newstate == State::COOLDOWN);
-
     _state = newstate;
     Runloop::main_runloop().schedule_task([=]() {
         state_changed(newstate);
     });
 
     _cooldown_condition.notify_all();
-    if (schedule_cooldown) {
+    if (newstate == State::COOLDOWN) {
         std::thread timer([=] {
             // If going from heating -> cooldown, set a cooldown timer to automatically transition
             // back to the Idle state.
