@@ -72,10 +72,10 @@ void GraphActor::render(cairo_t *cr, Rect at_rect)
     // and the highest value
     double scale_val = (1.0 / MAX(1.0, (high_val - low_val)));
 
-    double x_offset = width;
+    double x_offset = width - line_width;
     const double y_padding = 10.0;
     for (unsigned i = 0; i < _samples.size(); i++) {
-        unsigned rev_idx = _samples.size() - 1 - i;
+        unsigned long rev_idx = _samples.size() - 1 - i;
         Sample s = _samples.at(rev_idx);
 
         // "Center" graph about the mean
