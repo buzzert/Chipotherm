@@ -40,8 +40,12 @@ ActorGridPtr PrimaryScene::initialize_statistics_grid()
     grid->set_padding(10.0);
 
     // Clock
-    auto clock_actor = std::make_shared<ClockActor>(Rect());
-    grid->stack_actor(clock_actor, 0, 50.0);
+    _status_label = std::make_shared<LabelActor>(RECT_ZERO, "IDLE");
+    _status_label->set_foreground_color(Palette::foreground);
+    _status_label->set_alignment(PANGO_ALIGN_CENTER);
+    _status_label->set_font_prop("Input Mono 16");
+
+    grid->stack_actor(_status_label, 0, 50.0);
 
     // Temperatures 
     {
@@ -255,6 +259,18 @@ void PrimaryScene::update()
         _graph->add_sample(current_temp);
         _last_graph_update_time = Clock::now();
     }
+
+    if (_monitor.get_current_state() == Monitor::State::COOLDOWN) {
+        if (Clock::now() - _last_status_blink_time > 0.5s) {
+            const float dimmed_alpha = 0.25f;
+
+            bool direction = _status_label->get_alpha() > dimmed_alpha;
+            _status_label->set_alpha(direction ? dimmed_alpha : 1.0f);
+            _status_label->set_needs_display();
+
+            _last_status_blink_time = Clock::now();
+        }
+    }
 }
 
 void PrimaryScene::update_ui_state()
@@ -290,6 +306,33 @@ void PrimaryScene::update_ui_state()
     } else {
         _online_label->set_contents("OFFLINE ");
         _online_label->set_foreground_color(Colors::red);
+    }
+
+    std::string state_string;
+    Color label_color = Palette::foreground;
+    Monitor::State state = _monitor.get_current_state();
+    switch (state) {
+        case Monitor::DISABLED:
+            state_string = "DISABLED";
+            break;
+        case Monitor::IDLE:
+            state_string = "IDLE";
+            break;
+        case Monitor::HEATING:
+            label_color = Colors::red;
+            state_string = "HEATING";
+            break;
+        case Monitor::COOLDOWN:
+            label_color = Colors::white;
+            state_string = "COOLDOWN";
+            break;
+    }
+
+    _status_label->set_foreground_color(label_color);
+    _status_label->set_contents(state_string);
+    if (state != Monitor::State::COOLDOWN) {
+        // Reset animation
+        _status_label->set_alpha(1.0f);
     }
 
     // Monitoring status

@@ -15,7 +15,12 @@
 
 // How often to allow the heater to toggle between engaged/disengaged
 static const float k_temperature_hysteresis = 2; // in degrees
-static const std::chrono::seconds k_toggle_hysteresis(30); // in seconds
+
+// Minimum amount of time between cycles
+static const std::chrono::seconds k_toggle_hysteresis(30);
+
+// How long the heater runs the cooldown cycle for, after turning off (for gas heaters)
+static const std::chrono::seconds k_cooldown_time(60);
 
 Monitor::Monitor()
 {}
@@ -89,7 +94,7 @@ void Monitor::set_monitoring_enabled(bool enabled)
         // Turn off heater
         _controller.set_heater_on(false);
 
-        transition_to_state(State::DISABLED);
+        transition_to_state(State::COOLDOWN); // COOLDOWN -> DISABLED
         _monitor_condition.notify_all();
         _monitor_thread.join();
     }
@@ -132,8 +137,25 @@ void Monitor::set_target_temperature(float target)
 
 void Monitor::transition_to_state(State newstate)
 {
+    bool schedule_cooldown = (_state == State::HEATING && newstate == State::COOLDOWN);
+
     _state = newstate;
     Runloop::main_runloop().schedule_task([=]() {
         state_changed(newstate);
     });
+
+    _cooldown_condition.notify_all();
+    if (schedule_cooldown) {
+        std::thread timer([=] {
+            // If going from heating -> cooldown, set a cooldown timer to automatically transition
+            // back to the Idle state.
+            std::unique_lock<std::mutex> lk(_cooldown_mutex);
+            _cooldown_condition.wait_for(lk, k_cooldown_time);
+            if (_state == State::COOLDOWN) {
+                transition_to_state(State::DISABLED);
+            }
+        });
+
+        timer.detach();
+    }
 }

@@ -23,6 +23,9 @@ public:
         // Heater engaged
         HEATING,
 
+        // Heater is disengaged, in cooldown period
+        COOLDOWN,
+
         // Monitoring, but heater disengaged
         IDLE
     };
@@ -62,6 +65,9 @@ private:
     std::thread _monitor_thread;
     std::mutex  _monitor_mutex;
     std::condition_variable _monitor_condition;
+
+    std::mutex _cooldown_mutex;
+    std::condition_variable _cooldown_condition;
 
     using Clock = std::chrono::system_clock;
     std::chrono::time_point<Clock> _last_engagement_time;

@@ -37,6 +37,7 @@ private:
     void user_set_monitoring_enabled(bool enabled);
 
     LabelActorPtr _online_label;
+    LabelActorPtr _status_label;
 
     RoundedTitleActorPtr _current_temp_indicator;
     RoundedTitleActorPtr _target_temp_indicator;
@@ -54,6 +55,7 @@ private:
     using Clock = std::chrono::system_clock;
     std::chrono::time_point<Clock> _last_sample_time;
     std::chrono::time_point<Clock> _last_graph_update_time;
+    std::chrono::time_point<Clock> _last_status_blink_time;
     Monitor _monitor;
 
     SoundEngine _sounds;
