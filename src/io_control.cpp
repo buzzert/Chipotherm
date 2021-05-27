@@ -27,6 +27,10 @@ float IOControl::read_temperature()
         if (!result) {
             fprintf(stderr, "Error reading temperature from device\n");
             resultF = -1.0; // report -1 so it's really obvious something is wrong in the UI
+
+            // But also try to re-initialize the temperature monitor. The USB hub gets
+            // reset sometimes on the chip. 
+            initialize_temperature_monitor();
         } else {
             resultF = (resultC * (9.0f / 5.0f) + 32.0f);
         }
@@ -86,26 +90,36 @@ bool IOControl::get_display_on()
     return (strcmp(dpms_value, "On") == 0);
 }
 
+void IOControl::initialize_temperature_monitor()
+{
+    // Close monitor device if already exists
+    if (_monitor_device) {
+       _monitor_device = nullptr; 
+    }
+
+    do {
+        char *error_str = nullptr;
+        tempered_device_list *device_list = tempered_enumerate(&error_str);
+        if (!device_list) {
+            fprintf(stderr, "Error enumerating temperature devices: %s\n", error_str);
+            break;
+        }
+
+        tempered_device *device = tempered_open(device_list, &error_str);
+        if (!device) {
+            fprintf(stderr, "Error opening temperature device: %s\n", error_str);
+            break;
+        }
+
+        _monitor_device = std::shared_ptr<tempered_device>(device, tempered_close);
+    } while (0);
+}
+
 void IOControl::initialize_devices_if_necessary()
 {
     // Thermostat
     if (!_monitor_device) {
-        do {
-            char *error_str = nullptr;
-            tempered_device_list *device_list = tempered_enumerate(&error_str);
-            if (!device_list) {
-                fprintf(stderr, "Error enumerating temperature devices: %s\n", error_str);
-                break;
-            }
-
-            tempered_device *device = tempered_open(device_list, &error_str);
-            if (!device) {
-                fprintf(stderr, "Error opening temperature device: %s\n", error_str);
-                break;
-            }
-
-            _monitor_device = std::shared_ptr<tempered_device>(device, tempered_close);
-        } while (0);
+        initialize_temperature_monitor();
     }
 
     // Relay GPIO switch

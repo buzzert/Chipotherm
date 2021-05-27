@@ -33,4 +33,5 @@ private:
     std::shared_ptr<tempered_device> _monitor_device;
     std::shared_ptr<udev_device>     _display_device;
     void initialize_devices_if_necessary();
+    void initialize_temperature_monitor();
 };
