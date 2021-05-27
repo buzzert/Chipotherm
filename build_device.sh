@@ -2,14 +2,25 @@
 
 echo Building chipotherm
 
-docker build -t buzzert/chipotherm:build .
+if [[ $BUILDING_DEVICE -eq 1 ]]; then 
+    cd /src
+    mkdir -p build_device
+    cd build_device
+    cmake ..
+    make -j4
+else 
+    DOCKER=$(which podman)
 
-VERS=$(git describe)
+    $DOCKER build -t buzzert/chipotherm-build .
 
-mkdir -p build_device
-docker container create --name extract buzzert/chipotherm:build
-docker container cp extract:/build/src/chipotherm-$VERS ./build_device
-docker container rm -f extract
+    VERS=$(git describe)
 
-echo Built product \'chipotherm\' in build_device
+    mkdir -p build_device
+    $DOCKER run \
+        -v $(dirname "$0"):/src \
+        -e BUILDING_DEVICE=1 \
+        buzzert/chipotherm-build \
+        /src/build_device.sh
 
+    echo Built product \'chipotherm\' in build_device
+fi
